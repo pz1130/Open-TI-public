@@ -1,0 +1,11 @@
+# 初始值：在 Web“配置”页保存后以数据库为准，本文件不再生效。
+# 保留期（设计文档 2.5），单位：天。到期由每日任务 opti.apply_retention 删除或匿名化；
+# 执行前可用 opti retention --dry-run 查看将删除的数量。审计日志不自动删除（设计文档 16.3）。
+raw_items_days: 90            # 原始采集数据（按月分区整块删除）
+report_contacts_days: 90      # 公众举报中的联系方式（匿名化）
+exposed_accounts_days: 180    # 泄露事件中的员工邮箱
+documents_days: 365           # 新闻与网页文档（只含标题、摘要与命中片段）
+findings_days: 365            # 没有告警的发现
+cases_days: 1095              # 有告警的发现及其告警、下架记录、证据、反馈（按法务要求调整）
+connector_runs_days: 90       # 连接器运行记录
+reports_days: 365             # 日报、周报与月报

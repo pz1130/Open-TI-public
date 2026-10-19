@@ -1,0 +1,5 @@
+enabled: true
+license_approved: true
+license_ref: "DEV-DEFAULT"
+config:
+  tlds: [com, net, org, info, top, xyz, online, site, shop, cn]

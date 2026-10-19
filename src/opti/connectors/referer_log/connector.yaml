@@ -1,0 +1,15 @@
+id: referer_log
+name: "官网访问日志 Referer（syslog）"
+version: 0.1.0
+category: phishing
+kind: [on_demand]
+tier: free
+entrypoint: "opti.connectors.referer_log.connector:RefererLogConnector"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: domestic
+default_enabled: true
+outputs: [domain]
+compliance_notes: |
+  使用机构自己的 Web/CDN 访问日志，经 syslog 实时发送。只保留来源主机名、次数与被盗用的静态资源路径，
+  不保存访问者 IP、完整来源 URL 与 User-Agent（设计文档 2.5、4.12）。

@@ -1,0 +1,25 @@
+id: cisa_kev
+name: "CISA 已被利用漏洞目录（KEV）"
+version: 0.1.0
+category: threat_feed
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.cisa_kev.connector:CisaKevConnector"
+homepage: https://www.cisa.gov/known-exploited-vulnerabilities-catalog
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: any
+pii_risk: low
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_minute: 6 }
+schedule: { default: "15 */6 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    api_base: { type: string, default: "https://www.cisa.gov/sites/default/files/feeds/known_exploited_vulnerabilities.json" }
+  additionalProperties: false
+outputs: [vulnerability]
+compliance_notes: |
+  美国政府公开数据，无需密钥。只回传新增或内容有变化的条目；与本机构软件清单的比对只在平台进行，清单不下发到采集节点。

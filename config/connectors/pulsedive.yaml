@@ -1,0 +1,5 @@
+# 取得机构商业 API 授权后，配置 OPTI_SECRET_PULSEDIVE_API_KEY 并启用。
+enabled: false
+license_approved: false
+plan: team
+config: {}

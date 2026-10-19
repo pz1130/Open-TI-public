@@ -1,0 +1,25 @@
+id: certstream
+name: "证书透明度实时流（自建 certstream-server-go）"
+version: 0.1.0
+category: ct
+kind: [stream]
+tier: free
+entrypoint: "opti.connectors.certstream.connector:CertstreamConnector"
+homepage: https://github.com/d-Rickyy-b/certstream-server-go
+tos_url: https://certificate.transparency.dev/
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+pii_risk: low
+default_enabled: true
+schedule: { default: null, min_interval_seconds: 0 }
+config_schema:
+  type: object
+  properties:
+    url: { type: string, default: "ws://localhost:8080/" }
+    max_reconnects: { type: [integer, "null"], minimum: 0, default: null }
+    reconnect_max_delay: { type: number, minimum: 0, default: 60 }
+  additionalProperties: false
+outputs: [certificate, domain]
+compliance_notes: |
+  证书透明度日志是公开数据。只消费自建 certstream-server-go 的 lite 流（/），不访问被监测域名。

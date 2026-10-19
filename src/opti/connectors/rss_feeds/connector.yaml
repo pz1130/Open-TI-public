@@ -1,0 +1,39 @@
+id: rss_feeds
+name: "RSS / Atom 订阅（媒体、监管、CERT）"
+version: 0.1.0
+category: search_news
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.rss_feeds.connector:RssFeedsConnector"
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: overseas
+pii_risk: low
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_second: 1 }
+schedule: { default: "*/30 * * * *", min_interval_seconds: 600 }
+config_schema:
+  type: object
+  properties:
+    feeds:
+      type: array
+      default: []
+      items:
+        type: object
+        required: [url]
+        properties:
+          url: { type: string }
+          name: { type: string }
+          language: { type: string }
+          fetch_all: { type: boolean, default: false }
+        additionalProperties: false
+    max_articles: { type: integer, minimum: 0, maximum: 500, default: 50 }
+    article_timeout: { type: number, minimum: 1, maximum: 30, default: 10 }
+    feed_timeout: { type: number, minimum: 1, maximum: 60, default: 15 }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  只订阅使用机构确认可用的公开 RSS / Atom 源；正文只用于关键词匹配，平台只保存标题、摘要与命中片段。
+  外部 XML 拒绝 DTD 与实体；文章抓取只访问公网地址。

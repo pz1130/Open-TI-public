@@ -1,0 +1,32 @@
+id: otx
+name: "AlienVault OTX 情报包"
+version: 0.1.0
+category: threat_feed
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.otx.connector:OtxConnector"
+homepage: https://otx.alienvault.com
+commercial_use: unknown
+last_reviewed: 2026-10-03
+egress: overseas
+pii_risk: low
+default_enabled: false
+credentials:
+  - { name: api_key, required: true, description: "OTX API Key（免费注册后在账户设置中获取）" }
+plans:
+  free:
+    rate_limit: { per_minute: 30 }
+schedule: { default: "50 */6 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    max_queries: { type: integer, minimum: 1, maximum: 20, default: 10 }
+    api_base: { type: string, default: "https://otx.alienvault.com/api/v1/search/pulses" }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  不在设计文档的"无条件免费"清单中，机构使用条款需法务确认后批准。
+  只发送允许外部检索的短语；只接收 TLP white / clear / green 的情报包；不抓取情报包页面。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text]

@@ -1,0 +1,34 @@
+id: ransomware_live
+name: "ransomware.live 勒索受害者追踪"
+version: 0.1.0
+category: ransomware
+kind: [poll]
+tier: freemium
+entrypoint: "opti.connectors.ransomware_live.connector:RansomwareLiveConnector"
+homepage: https://www.ransomware.live
+tos_url: https://www.ransomware.live/about
+commercial_use: restricted
+last_reviewed: 2026-10-03
+egress: any
+pii_risk: low
+default_enabled: false
+credentials:
+  - { name: api_key, required: false, description: "PRO 接口密钥（可选）" }
+plans:
+  free:
+    rate_limit: { per_minute: 1 }
+  pro:
+    rate_limit: { per_minute: 30 }
+    requires: [api_key]
+schedule: { default: "5 */2 * * *", min_interval_seconds: 1800 }
+config_schema:
+  type: object
+  properties:
+    api_base: { type: string, default: "https://api.ransomware.live/v2" }
+    api_key_header: { type: string, default: "X-API-KEY" }
+    link_hosts: { type: array, items: { type: string }, default: ["www.ransomware.live", "ransomware.live"] }
+  additionalProperties: false
+outputs: [leak_post]
+compliance_notes: |
+  只读取聚合服务整理的受害者元数据（组织名、团伙、日期、行业、国家），不访问泄露站、不下载泄露数据。
+  免费 v2 接口官方注明仅限个人用途，默认不批准；机构使用请采购 PRO（plan: pro，填写 api_base 与密钥）。

@@ -1,0 +1,5 @@
+# 必须取得 Reddit API 访问批准；商业使用还需协议及机构法务审查。
+enabled: false
+license_approved: false
+plan: approved
+config: {}

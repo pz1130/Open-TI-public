@@ -1,0 +1,22 @@
+Subject: Report: account or content impersonating $org_name ($category)
+
+Dear $target_name trust and safety team,
+
+We are $org_name ($org_website). $legal_statement
+
+The account or content at the link below impersonates our organization ($category), in breach of your policies on impersonation and fraud. We kindly request that you review and remove it.
+
+  Link: $url
+  First seen: $first_seen
+
+Description:
+$detail
+
+Evidence summary (capture or upload time and SHA-256 of screenshots):
+$evidence
+
+The full evidence package is available on request. Please reply to this message or contact $org_contact.
+
+Regards,
+$signature
+$date

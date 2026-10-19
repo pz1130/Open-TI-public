@@ -1,0 +1,4 @@
+# 冒充社交账号检测：法务审查各实例规则、外发的受保护账号名称与保存字段后启用。
+enabled: false
+license_approved: false
+config: {}

@@ -1,0 +1,37 @@
+id: google_news
+name: "Google News RSS 搜索"
+version: 0.1.0
+category: search_news
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.google_news.connector:GoogleNewsConnector"
+homepage: https://news.google.com
+commercial_use: unknown
+last_reviewed: 2026-10-03
+egress: overseas
+pii_risk: low
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 6 }
+schedule: { default: "10 */3 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    editions:
+      type: array
+      items:
+        type: object
+        required: [hl, gl, ceid]
+        properties: { hl: { type: string }, gl: { type: string }, ceid: { type: string } }
+        additionalProperties: false
+    max_queries: { type: integer, minimum: 1, maximum: 50, default: 10 }
+    api_base: { type: string, default: "https://news.google.com/rss/search" }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  非正式公开接口，条款与稳定性需法务核实（设计文档 4.1），默认不批准；低频使用。
+  不抓取文章正文（链接是 Google 的跳转页），只用标题与摘要。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text]

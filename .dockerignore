@@ -1,0 +1,15 @@
+.git
+.venv
+data
+docs
+tests
+*.docx
+.env
+
+.env.*
+config/software.yaml
+deploy/pki
+
+
+web/node_modules
+web/dist

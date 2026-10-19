@@ -1,0 +1,24 @@
+id: phishtank
+name: "PhishTank 已验证钓鱼 URL"
+version: 0.1.0
+category: phishing
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.phishtank.connector:PhishtankConnector"
+homepage: https://phishtank.org
+tos_url: https://phishtank.org/terms_of_use.php
+commercial_use: unknown
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: false
+credentials:
+  - { name: app_key, required: true, description: "PhishTank 应用 Key（新注册可能受限）" }
+plans:
+  free:
+    rate_limit: { per_minute: 2 }
+schedule: { default: "5 * * * *", min_interval_seconds: 3600 }
+config_schema: { type: object, additionalProperties: false }
+outputs: [url]
+compliance_notes: |
+  在线且已验证的列表（online-valid.json，体积数十 MB），每小时最多下载一次（官方要求）。
+  Key 出现在下载地址中：失败信息只经连接器日志（自动脱敏）输出。条款待法务确认，默认不批准。

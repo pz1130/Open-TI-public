@@ -1,0 +1,33 @@
+id: gdelt_doc
+name: "GDELT DOC 2.0 全球新闻"
+version: 0.1.0
+category: search_news
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.gdelt_doc.connector:GdeltDocConnector"
+homepage: https://blog.gdeltproject.org/gdelt-doc-2-0-api-debuts/
+tos_url: https://www.gdeltproject.org/about.html#termsofuse
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: overseas
+pii_risk: low
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_minute: 12 }
+schedule: { default: "*/15 * * * *", min_interval_seconds: 600 }
+config_schema:
+  type: object
+  properties:
+    max_queries: { type: integer, minimum: 1, maximum: 20, default: 10 }
+    max_articles: { type: integer, minimum: 0, maximum: 500, default: 50 }
+    article_timeout: { type: number, minimum: 1, maximum: 30, default: 10 }
+    api_base: { type: string, default: "https://api.gdeltproject.org/api/v2/doc/doc" }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  开放数据，使用时注明出处（GDELT Project）。每 5 秒最多 1 次请求；滚动约 3 个月窗口。
+  正文只用于关键词匹配，平台只保存标题、摘要与命中片段。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text]

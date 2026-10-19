@@ -1,0 +1,28 @@
+id: greynoise
+name: "GreyNoise Community IP 富化"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: freemium
+entrypoint: "opti.enrichers.greynoise.enricher:GreyNoiseEnricher"
+homepage: https://docs.greynoise.io/docs/using-the-greynoise-community-api
+tos_url: https://www.greynoise.io/terms
+commercial_use: restricted
+last_reviewed: 2026-10-05
+egress: overseas
+pii_risk: low
+default_enabled: false
+credentials:
+  - { name: api_key, required: true, description: "GreyNoise Community API Key（企业邮箱注册）" }
+plans:
+  free:
+    rate_limit: { per_minute: 1 }
+config_schema:
+  type: object
+  additionalProperties: false
+outputs: [ip]
+compliance_notes: |
+  仅对平台已收到的公网 IPv4 指标查询 Community API，不批量枚举地址。
+  免费账号与 Visualizer 共用每周搜索额度，额度耗尽时暂停请求；保留一周实体缓存。
+  噪声、RIOT 与分类只作研判上下文，不单独加减分或自动阻断。
+  免费方案的机构使用需确认条款；获批前保持关闭，不配置共享研究账号密钥。

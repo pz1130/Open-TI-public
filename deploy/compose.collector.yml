@@ -1,0 +1,56 @@
+# 境外采集节点（设计文档 3.4、18.2、18.3）：只出站访问互联网与境内采集网关，无入站端口，不保存长期数据。
+# 配置在仓库根目录的 .env.collector（复制 .env.collector.example）。证书文件按节点 ID 命名：
+# 本机联调使用 opti pki-dev 生成的 deploy/pki/node-<ID>.pem；生产使用使用机构PKI 签发的证书。
+name: opti-collector
+
+services:
+  collector:
+    build: { context: .., dockerfile: Dockerfile }
+    image: opti:dev
+    command: ["opti", "collector"]
+    restart: unless-stopped
+    env_file:
+      - path: ../.env.collector
+        required: true
+    environment:
+      OPTI_CERTSTREAM_URL: ws://certstream-srv:8080/
+      OPTI_SANDBOX_URL: http://browser:8000
+      OPTI_GATEWAY_CA: /pki/ca.pem
+      OPTI_NODE_CERT: /pki/node.pem
+      OPTI_NODE_KEY: /pki/node.key
+    volumes:
+      - ./pki/ca.pem:/pki/ca.pem:ro
+      - ./pki/node-${OPTI_NODE_ID:-hk1}.pem:/pki/node.pem:ro
+      - ./pki/node-${OPTI_NODE_ID:-hk1}.key:/pki/node.key:ro
+    read_only: true
+    tmpfs: [/tmp, /app/data]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # 本机联调：网关在宿主机 8443 端口
+    networks: [default, sandbox]
+    depends_on: [certstream-srv, browser]
+
+  certstream-srv:
+    image: 0rickyy0/certstream-server-go:latest
+    restart: unless-stopped
+    volumes:
+      - ./certstream/config.yaml:/app/config.yaml:ro
+
+  browser:
+    build: { context: .., dockerfile: Dockerfile.sandbox }
+    image: opti-sandbox:dev
+    restart: unless-stopped
+    environment:
+      OPTI_SANDBOX_OCR_ENABLED: ${OPTI_SANDBOX_OCR_ENABLED:-false}
+    networks: [sandbox]  # 截图浏览器通过同进程校验并钉住 IP 的 SOCKS5 代理出站
+    read_only: true
+    tmpfs: [/tmp, /home/sandbox]
+    shm_size: 1gb
+    # 打开的是可疑站点：限制内存、进程数与 CPU，恶意页面最多拖垮沙箱本身，不影响采集节点
+    mem_limit: 2g
+    pids_limit: 512
+    cpus: 2
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+
+networks:
+  sandbox: {}

@@ -1,0 +1,21 @@
+Subject: 举报：冒充 $org_name 的账号或内容（$category）
+
+$target_name 团队：
+
+我们是 $org_name（$org_website）。$legal_statement
+
+以下链接中的账号或内容冒用本机构名义，属于$category，违反贵平台关于冒充与诈骗的规定，请核实后处理。
+
+  链接：$url
+  首次发现：$first_seen
+
+情况说明：
+$detail
+
+证据摘要（截图采集或上传时间与 SHA-256）：
+$evidence
+
+如需完整证据包，请回复本邮件或联系 $org_contact。
+
+$signature
+$date

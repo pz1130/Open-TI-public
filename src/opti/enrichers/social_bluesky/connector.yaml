@@ -1,0 +1,27 @@
+id: social_bluesky
+name: "Bluesky 冒充账号搜索"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.social_bluesky.enricher:BlueskyEnricher"
+homepage: https://docs.bsky.app/docs/api/app-bsky-actor-search-actors
+tos_url: https://bsky.social/about/support/tos
+commercial_use: unknown
+last_reviewed: 2026-10-14
+egress: overseas
+pii_risk: medium
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 30 }
+config_schema:
+  type: object
+  properties:
+    appview_url: { type: string, pattern: "^https://", default: "https://public.api.bsky.app" }
+  additionalProperties: false
+outputs: [social_profile]
+compliance_notes: |
+  只为管理员登记的受保护账号查询其资料，并用其名称与补充搜索词搜索公开账号资料。
+  不采集帖子、关注关系或粉丝数；头像只在内存中计算 dHash 与 SHA-256，不保存图片。
+  命中只作人工复核线索。使用前须审查 Bluesky 服务条款与数据保护要求并在实例配置中批准。

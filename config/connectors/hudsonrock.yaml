@@ -1,0 +1,7 @@
+# 免费网页工具不等于可用 API；取得 API 授权并核对响应格式前保持关闭。
+enabled: false
+license_approved: false
+plan: authorized
+config:
+  domains: []
+  schema_verified: false

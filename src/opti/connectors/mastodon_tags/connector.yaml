@@ -1,0 +1,30 @@
+id: mastodon_tags
+name: "Mastodon 公开话题时间线"
+version: 0.1.0
+category: social
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.mastodon_tags.connector:MastodonTagsConnector"
+homepage: https://docs.joinmastodon.org/methods/timelines/#tag
+commercial_use: unknown
+last_reviewed: 2026-10-04
+egress: overseas
+pii_risk: medium
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 20 }
+schedule: { default: "7,37 * * * *", min_interval_seconds: 900 }
+config_schema:
+  type: object
+  properties:
+    instances: { type: array, items: { type: string }, maxItems: 10, default: [] }
+    hashtags: { type: array, items: { type: string }, maxItems: 20, default: [] }
+    page_size: { type: integer, minimum: 1, maximum: 40, default: 40 }
+    max_pages: { type: integer, minimum: 1, maximum: 10, default: 3 }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  只轮询人工审核的实例和话题的公开时间线，不做全网搜索、账号资料采集或媒体下载。
+  各实例可关闭匿名时间线；遇到 401/403 直接停止，不绕过访问限制。
+  上线前须确认实例规则、采集范围与保留策略。

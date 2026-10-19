@@ -1,0 +1,29 @@
+id: hudsonrock
+name: "Hudson Rock 窃密木马统计（待授权适配）"
+version: 0.1.0
+category: breach
+kind: [poll]
+tier: paid
+entrypoint: "opti.connectors.hudsonrock.connector:HudsonRockConnector"
+homepage: https://docs.hudsonrock.com/reference/search-by-domains
+commercial_use: unknown
+last_reviewed: 2026-10-03
+egress: any
+pii_risk: low
+default_enabled: false
+plans:
+  authorized:
+    rate_limit: { per_minute: 5 }
+schedule: { default: "50 3 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    domains: { type: array, items: { type: string }, default: [] }
+    api_url: { type: string, format: uri }
+    schema_verified: { type: boolean, default: false }
+  additionalProperties: false
+outputs: [breach]
+compliance_notes: |
+  官方免费网页工具不等于可用 API。原计划的 v2 URL 和响应字段未获得官方文档证实；取得 API 授权、核对版本/认证/字段前不得启用。
+  当前适配器只消费统计字段，不保留个人信息；默认关闭且未批准。
+  只查询本机构自己的域名。

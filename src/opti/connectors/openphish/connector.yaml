@@ -1,0 +1,23 @@
+id: openphish
+name: "OpenPhish 社区钓鱼 URL 列表"
+version: 0.1.0
+category: phishing
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.openphish.connector:OpenPhishConnector"
+homepage: https://openphish.com
+commercial_use: unknown
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: false
+schedule: { default: "*/30 * * * *", min_interval_seconds: 1800 }
+config_schema:
+  type: object
+  properties:
+    feed_url: { type: string, default: "https://openphish.com/feed.txt" }
+  additionalProperties: false
+outputs: [url]
+compliance_notes: |
+  社区版纯文本列表，每条都是 OpenPhish 已确认的钓鱼 URL（intel.confirmed = true）。
+  社区版用于机构内部安全运营是否符合其条款待法务确认（设计文档 2.4），默认不批准。
+  只下载列表，不访问列表中的 URL；命中的 URL 由境外节点的网页探测与沙箱取证。

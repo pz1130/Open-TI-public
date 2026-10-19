@@ -1,0 +1,27 @@
+id: nrd
+name: "新注册域名列表（hagezi NRD / WhoisDS 免费版）"
+version: 0.1.0
+category: phishing
+kind: [batch]
+tier: free
+entrypoint: "opti.connectors.nrd.connector:NrdConnector"
+homepage: https://github.com/hagezi/nrd
+tos_url: https://github.com/hagezi/nrd/blob/main/LICENSE
+commercial_use: unknown
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: false
+schedule: { default: "30 7 * * *", min_interval_seconds: 43200 }
+config_schema:
+  type: object
+  properties:
+    sources:
+      type: array
+      items: { enum: [hagezi_nrd7, whoisds] }
+      default: [hagezi_nrd7]
+    whoisds_days_back: { type: integer, minimum: 1, maximum: 7, default: 3 }
+  additionalProperties: false
+outputs: [domain]
+compliance_notes: |
+  hagezi nrd7：约 290 万个域名/7 天（2026-10-01 实测 49 MB）；WhoisDS 免费版：约 7 万个/天。
+  两者许可条款待法务确认（设计文档 2.4），默认不启用。只下载域名列表，不访问域名。

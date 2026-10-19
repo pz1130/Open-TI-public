@@ -1,0 +1,6 @@
+# 证书透明度是公开数据。license_approved 为开发环境默认值，上线前由法务在许可状态表中确认（Phase 0）
+enabled: true
+license_approved: true
+license_ref: "DEV-DEFAULT"
+config:
+  url: "${OPTI_CERTSTREAM_URL:-ws://localhost:8080/}"

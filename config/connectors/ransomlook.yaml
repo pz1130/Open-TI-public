@@ -1,0 +1,4 @@
+# 公共实例条款未明确，默认不批准；自建实例时设置 api_base 与 link_hosts 后批准
+enabled: false
+license_approved: false
+config: {}

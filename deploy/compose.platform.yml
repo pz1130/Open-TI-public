@@ -1,0 +1,243 @@
+# 境内主平台（设计文档 18.2、18.3）。
+# 默认 local 模式：单机开发，采集也在本机（流式连接器与 CT 流服务用 profile local-ct 启动，
+# 截图沙箱用 profile local-sandbox）。生产使用 remote 模式：在 ../.env 中设 OPTI_COLLECTOR_MODE=remote，
+# 用 profile remote 启动采集网关，采集与截图交给境外节点（deploy/compose.collector.yml）。
+name: opti
+
+x-opti-env: &opti-env
+  OPTI_RULES: ${OPTI_RULES:-config/projects/example/keywords.yaml}
+  OPTI_ORGANIZATION: ${OPTI_ORGANIZATION:-config/organization.yaml}
+  OPTI_DATABASE_URL: postgresql+asyncpg://opti:opti@postgres:5432/opti
+  OPTI_BROKER_URL: redis://valkey:6379/0
+  OPTI_CERTSTREAM_URL: ws://certstream-srv:8080/
+  OPTI_S3_ENDPOINT: http://seaweedfs:8333
+  OPTI_SECRET_OBJSTORE_ACCESS_KEY: opti-dev        # 开发用对象存储账号（deploy/seaweedfs/s3.json）
+  OPTI_SECRET_OBJSTORE_SECRET_KEY: opti-dev-secret
+  OPTI_SANDBOX_URL: http://browser:8000            # 仅 local 模式使用
+
+x-opti: &opti
+  build: { context: .., dockerfile: Dockerfile }
+  image: opti:dev
+  env_file:
+    - path: ../.env
+      required: false
+  environment: *opti-env
+  volumes:
+    - opti-data:/app/data
+    # 本机构软件清单仅挂载到平台容器；镜像构建上下文已排除，采集节点拿不到。
+    - ../config/software.yaml:/app/config/software.yaml:ro
+  read_only: true
+  tmpfs: [/tmp]
+
+# 边缘入口只获得转交所需的配置，不能继承平台 env_file 的数据库/邮件/对象存储凭据。
+x-opti-edge: &opti-edge
+  build: { context: .., dockerfile: Dockerfile }
+  image: opti:dev
+  read_only: true
+  tmpfs: [/tmp]
+  security_opt: ["no-new-privileges:true"]
+  cap_drop: [ALL]
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    # 默认 /dev/shm 只有 64MB，大盘长区间查询的并行 Hash Join 会因动态共享内存不足报错
+    shm_size: 256m
+    environment:
+      POSTGRES_USER: opti
+      POSTGRES_PASSWORD: opti
+      POSTGRES_DB: opti
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U opti"]
+      interval: 5s
+      retries: 20
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    command: ["valkey-server", "--appendonly", "yes"]  # 设计文档 11：开启 AOF
+    volumes:
+      - valkey-data:/data
+
+  seaweedfs:
+    image: chrislusf/seaweedfs:latest
+    command: ["server", "-dir=/data", "-s3", "-s3.config=/etc/seaweedfs/s3.json"]
+    volumes:
+      - seaweed-data:/data
+      - ./seaweedfs/s3.json:/etc/seaweedfs/s3.json:ro
+
+  migrate:
+    <<: *opti
+    command: ["opti", "db-upgrade"]
+    restart: "no"
+    depends_on:
+      postgres: { condition: service_healthy }
+
+  worker:
+    <<: *opti
+    networks: [default, sandbox]
+    # 每个 ingest 在富化期间占用一个数据库连接（连接池默认 5+10）；并发上限要低于连接池，否则排队超时丢任务。
+    command: ["taskiq", "worker", "--max-async-tasks", "10", "opti.pipeline.broker:broker", "opti.pipeline.tasks"]
+    restart: unless-stopped
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      valkey: { condition: service_started }
+      seaweedfs: { condition: service_started }
+
+  scheduler:
+    <<: *opti
+    command: ["taskiq", "scheduler", "opti.pipeline.schedule:scheduler"]
+    restart: unless-stopped
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  api:
+    <<: *opti
+    command: ["opti", "api"]
+    restart: unless-stopped
+    environment:
+      <<: *opti-env
+      OPTI_SERVICE_CONTROL_DIR: /run/opti-control
+    volumes:
+      - opti-data:/app/data
+      - ../config/software.yaml:/app/config/software.yaml:ro
+      - service-control:/run/opti-control
+    ports:
+      - "${OPTI_API_BIND:-0.0.0.0}:8000:8000"  # 本机体验可在 .env 设为 127.0.0.1；生产放在机构反向代理后
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  # Only this isolated controller can talk to Docker; no network or platform credentials.
+  service-control:
+    build: { context: .., dockerfile: Dockerfile }
+    image: opti:dev
+    command: ["python", "-m", "opti.service_control", "--project", "${COMPOSE_PROJECT_NAME:-opti}"]
+    user: "0:0"
+    network_mode: none
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    cap_add: [DAC_OVERRIDE]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - service-control:/run/opti-control
+
+  gateway:
+    <<: *opti
+    profiles: [remote]
+    command: ["opti", "gateway"]
+    restart: unless-stopped
+    ports:
+      - "8443:8443"  # 生产环境只对采集节点的出口 IP 或专线/VPN 开放（设计文档 18.3）
+    environment:
+      <<: *opti-env
+      OPTI_GATEWAY_TLS_CERT: /pki/gateway.pem
+      OPTI_GATEWAY_TLS_KEY: /pki/gateway.key
+      OPTI_GATEWAY_CLIENT_CA: /pki/ca.pem
+      OPTI_GATEWAY_NODES: hk1
+    volumes:
+      - opti-data:/app/data
+      - ./pki/ca.pem:/pki/ca.pem:ro
+      - ./pki/gateway.pem:/pki/gateway.pem:ro
+      - ./pki/gateway.key:/pki/gateway.key:ro
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      valkey: { condition: service_started }
+      seaweedfs: { condition: service_started }
+
+  stream-certstream:
+    <<: *opti
+    profiles: [local-ct]
+    command: ["opti", "stream", "certstream"]
+    restart: unless-stopped
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  stream-bluesky:
+    <<: *opti
+    profiles: [local-social]
+    command: ["opti", "stream", "bluesky_jetstream"]
+    restart: unless-stopped
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+      valkey: { condition: service_started }
+      seaweedfs: { condition: service_started }
+
+  stream-own-domain-ct:
+    <<: *opti
+    profiles: [local-ct]
+    command: ["opti", "stream", "own_domain_ct"]
+    restart: unless-stopped
+    depends_on:
+      migrate: { condition: service_completed_successfully }
+
+  certstream-srv:
+    profiles: [local-ct]
+    image: 0rickyy0/certstream-server-go:latest
+    restart: unless-stopped
+    volumes:
+      - ./certstream/config.yaml:/app/config.yaml:ro
+
+  browser:
+    profiles: [local-sandbox]
+    networks: [sandbox]
+    build: { context: .., dockerfile: Dockerfile.sandbox }
+    image: opti-sandbox:dev
+    restart: unless-stopped
+    environment:
+      OPTI_SANDBOX_OCR_ENABLED: ${OPTI_SANDBOX_OCR_ENABLED:-false}
+    read_only: true
+    tmpfs: [/tmp, /home/sandbox]
+    shm_size: 1gb
+    # 打开的是可疑站点：限制内存、进程数与 CPU，恶意页面最多拖垮沙箱本身，不影响采集节点
+    mem_limit: 2g
+    pids_limit: 512
+    cpus: 2
+    security_opt: ["no-new-privileges:true"]
+    cap_drop: [ALL]
+
+  intake:
+    <<: *opti-edge
+    profiles: [intake]
+    command: ["opti", "intake"]
+    restart: unless-stopped
+    deploy: { replicas: 1 }
+    ports: ["127.0.0.1:8100:8100"]
+    environment:
+      OPTI_BROKER_URL: redis://valkey:6379/0
+      OPTI_RULES: ${OPTI_RULES:-config/projects/example/keywords.yaml}
+      OPTI_INTAKE_PREFIX: ${OPTI_INTAKE_PREFIX:-/ti-intake}
+      OPTI_INTAKE_FORWARD: direct
+      OPTI_SECRET_INTAKE_CANARY_TOKEN: ${OPTI_SECRET_INTAKE_CANARY_TOKEN:-}
+      OPTI_SECRET_INTAKE_REPORT_KEY: ${OPTI_SECRET_INTAKE_REPORT_KEY:-}
+      OPTI_SECRET_MASK_KEY: ${OPTI_SECRET_MASK_KEY:-}
+      OPTI_FORWARDED_ALLOW_IPS: ${OPTI_FORWARDED_ALLOW_IPS:-127.0.0.1}
+    depends_on:
+      valkey: { condition: service_started }
+
+  syslog:
+    <<: *opti-edge
+    profiles: [syslog]
+    command: ["opti", "syslog"]
+    restart: unless-stopped
+    ports: ["127.0.0.1:6514:6514"]
+    environment:
+      OPTI_BROKER_URL: redis://valkey:6379/0
+      OPTI_RULES: ${OPTI_RULES:-config/projects/example/keywords.yaml}
+      OPTI_SYSLOG_MIN_HITS: ${OPTI_SYSLOG_MIN_HITS:-3}
+      OPTI_SECRET_MASK_KEY: ${OPTI_SECRET_MASK_KEY:-}
+    depends_on:
+      valkey: { condition: service_started }
+
+volumes:
+  pg-data:
+  valkey-data:
+  seaweed-data:
+  opti-data:
+  service-control:
+
+networks:
+  sandbox: {}

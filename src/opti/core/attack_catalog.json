@@ -1,0 +1,36 @@
+{
+  "source": "https://github.com/mitre-attack/attack-stix-data/blob/master/enterprise-attack/enterprise-attack-19.2.json",
+  "source_sha256": "dc1639caa5501d720e280cf1cbd8fbe009884a0c9b3e6e9ed9d0c25166c3d8f4",
+  "techniques": [
+    {
+      "id": "T1566",
+      "stix_id": "attack-pattern--a62a8db3-f23a-4d8f-afd6-9dbc77e7813b",
+      "name": "Phishing",
+      "tactics": [
+        "initial-access"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1566/",
+      "modified": "2026-05-12T15:12:00.706Z"
+    },
+    {
+      "id": "T1583.001",
+      "stix_id": "attack-pattern--40f5caa0-4cb7-4117-89fc-d421bb493df3",
+      "name": "Domains",
+      "tactics": [
+        "resource-development"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1583/001/",
+      "modified": "2026-05-12T15:12:00.629Z"
+    },
+    {
+      "id": "T1585.001",
+      "stix_id": "attack-pattern--b1ccd744-3f78-4a0e-9bb2-2002057f7928",
+      "name": "Social Media Accounts",
+      "tactics": [
+        "resource-development"
+      ],
+      "url": "https://attack.mitre.org/techniques/T1585/001/",
+      "modified": "2026-05-12T15:12:00.708Z"
+    }
+  ]
+}

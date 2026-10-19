@@ -1,0 +1,13 @@
+Subject: Phishing report: $domain impersonating $org_name ($category)
+
+We are $org_name ($org_website). The URL below impersonates our organization ($category). Please add it to your blocklist.
+
+  URL: $url
+  Domain: $domain
+  First seen: $first_seen
+
+Evidence summary:
+$evidence
+
+Contact: $org_contact
+$signature

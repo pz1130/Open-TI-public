@@ -1,0 +1,6 @@
+# 实例和话题由机构人工审核；未配置前不运行。
+enabled: false
+license_approved: false
+config:
+  instances: []
+  hashtags: []

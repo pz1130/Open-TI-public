@@ -1,0 +1,4 @@
+# 机构账号与使用条款获批后，在采集节点配置 OPTI_SECRET_GREYNOISE_API_KEY 再启用。
+enabled: false
+license_approved: false
+config: {}

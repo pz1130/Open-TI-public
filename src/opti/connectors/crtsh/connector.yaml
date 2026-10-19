@@ -1,0 +1,28 @@
+id: crtsh
+name: "crt.sh 历史证书检索"
+version: 0.1.0
+category: ct
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.crtsh.connector:CrtshConnector"
+homepage: https://crt.sh
+tos_url: https://crt.sh
+commercial_use: unknown
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_minute: 6 }
+schedule: { default: "0 */6 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    api_url: { type: string, default: "https://crt.sh/" }
+  additionalProperties: false
+outputs: [certificate, domain]
+compliance_notes: |
+  公共服务，限速严格且经常返回 429/502（2026-10-02 实测 502）。作为 CT 实时流的补充与回溯，失败时跳过。
+
+# 支持关键词页面的手动扫描
+search_inputs: [domain]

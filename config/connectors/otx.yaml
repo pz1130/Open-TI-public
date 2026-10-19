@@ -1,0 +1,4 @@
+# 机构使用条款待法务确认，默认不批准；在采集节点 .env.collector 中设置 OPTI_SECRET_OTX_API_KEY
+enabled: true
+license_approved: false
+config: {}

@@ -1,0 +1,31 @@
+id: common_crawl
+name: "Common Crawl 已知 URL 历史记录核查"
+version: 0.1.0
+category: search_news
+kind: [batch]
+tier: free
+entrypoint: "opti.connectors.common_crawl.connector:CommonCrawlConnector"
+homepage: https://commoncrawl.org/cdxj-index
+tos_url: https://commoncrawl.org/terms-of-use
+commercial_use: unknown
+last_reviewed: 2026-10-04
+egress: overseas
+pii_risk: low
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 2 }
+schedule: { default: "17 3 1 * *", min_interval_seconds: 2592000 }
+config_schema:
+  type: object
+  properties:
+    candidate_urls: { type: array, items: { type: string }, maxItems: 20, default: [] }
+    max_crawls: { type: integer, minimum: 1, maximum: 2, default: 2 }
+    max_records: { type: integer, minimum: 1, maximum: 20, default: 10 }
+  additionalProperties: false
+outputs: [url]
+compliance_notes: |
+  仅对人工批准的品牌相关公开 URL 核查最近一至两个 CDX 索引。
+  CDX 是 URL 抓取索引，不提供网页正文全文搜索；本连接器不能主动发现未知仿冒域名。
+  不读取 WARC、网页正文或目标站点，不把历史抓取当作恶意确认。
+  CDX 服务严格限流；上线前审查使用条款及原站点权利，默认关闭。

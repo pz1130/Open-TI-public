@@ -1,0 +1,3 @@
+# OpenPhish 社区版条款待法务确认（设计文档 2.4），默认不批准；开发调试用 --allow-unapproved
+enabled: true
+license_approved: false

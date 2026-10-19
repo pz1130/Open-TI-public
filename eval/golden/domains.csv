@@ -1,0 +1,33 @@
+domain,expected,note
+sbr-loans.com,match,品牌词 + 诈骗词缀
+sbrloans.com,match,无分隔组合词
+login-sbr.net,match,前缀词缀
+loginsbr.net,match,无分隔前缀
+sbr2026.top,match,品牌词 + 数字
+sbrcareers.net,match,招聘诈骗组合词
+sbr-portal.top,match,高风险顶级域
+sbr.int.secure-login.xyz,match,子域伪装官方域名
+sbr-int.com,match,官方域名扁平形态
+sbrint.org,match,官方域名扁平形态
+samplebrand.org,match,全称
+samplebrand-careers.org,match,全称 + 词缀
+orbitbank-invest.com.cn,match,别称 + 多级后缀
+orbitbamk.com,match,别称拼写变体
+xn--br-loans-jhh.com,match,西里尔 ѕ 同形字（Punycode）
+ѕbr-loans.com,match,西里尔 ѕ 同形字（Unicode）
+sbr-loans.github.io,match,免费托管平台
+sbr.example-hosting.com,match,仅子域含品牌词（低分）
+crossbrace.com,no_match,子串包含 sbr
+busbridge-power.net,no_match,子串包含 sbr
+glassbreaker.shop,no_match,子串包含 sbr
+jobsbrokerbank.com,no_match,子串包含 sbr
+sbrox.io,no_match,品牌词 + 非词缀
+example.org,no_match,无关
+sbr.int,official,官方域名
+mail.sbr.int,official,官方子域
+*.sbr.int,official,CT 通配符证书
+sbrbank.com,known_lookalike,斯里兰卡 SBR Bank PLC
+www.sbrbank.com,known_lookalike,斯里兰卡 SBR Bank PLC 子域
+orbitfund.org,match,ORBIT + 金融词缀（受限品牌词）
+orbit-music.com,no_match,ORBIT 不带金融词缀
+exorbitant.com,no_match,子串包含 orbit

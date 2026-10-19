@@ -1,0 +1,27 @@
+# certstream-server-go 配置（基于官方 config.sample.yaml 精简）
+webserver:
+  listen_addr: "0.0.0.0"
+  listen_port: 8080
+  real_ip: false
+  # 只允许本机与容器网络访问（采集节点内部使用）
+  whitelist:
+    - "127.0.0.1/8"
+    - "172.16.0.0/12"
+  full_url: "/full-stream"
+  lite_url: "/"
+  domains_only_url: "/domains-only"
+  cert_path: ""
+  cert_key_path: ""
+  compression_enabled: false
+
+prometheus:
+  enabled: false
+
+stream_processing: []
+
+general:
+  disable_default_logs: false
+  drop_old_logs: true
+  # 不从历史索引回补（否则启动后会下载海量历史证书）
+  recovery:
+    enabled: false

@@ -1,0 +1,21 @@
+id: tls
+name: "TLS 证书信息"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.tls.enricher:TlsEnricher"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+config_schema:
+  type: object
+  properties:
+    port: { type: integer, minimum: 1, maximum: 65535, default: 443 }
+    timeout: { type: number, minimum: 0.1, default: 10 }
+    allow_private_targets: { type: boolean, default: false }  # 仅供测试；生产必须为 false
+  additionalProperties: false
+outputs: [certificate]
+compliance_notes: |
+  对可疑域名做一次 TLS 握手读取证书，不发送任何应用层数据；只能在境外采集节点运行，不暴露使用机构出口 IP（设计文档 2.8）。

@@ -1,0 +1,60 @@
+# Sample Brand 品牌保护示例项目的关键词规则（虚构品牌，仅作演示）
+# authorization_ref 为占位编号，取得书面授权后替换（设计文档 2.1）
+project: sample-brand-protection
+authorization_ref: "SAMPLE-AUTH-PENDING"
+languages: [en, zh]
+
+sets:
+  brand:
+    type: brand
+    weight: 1.0
+    terms:
+      - { value: "Sample Brand", mode: phrase }
+      - { value: "ORBIT Bank", mode: phrase }
+      - { value: "ORBIT Development Bank", mode: phrase }
+      - { value: "样本品牌", mode: phrase, variants: auto_traditional }
+      - { value: "样本品牌集团", mode: phrase, variants: auto_traditional }
+      - { value: "样本银行", mode: phrase, variants: auto_traditional }
+      - { value: "样本品牌银行", mode: phrase, variants: auto_traditional }
+      # 其他语言的名称同样只做完整短语匹配
+      - { value: "Marca de Exemplo", mode: phrase }
+      - { value: "Образцовый бренд", mode: phrase }
+      # 缩写极易误报，只在出现 SBR 特有上下文时触发（不用 bank/loan，同缩写的 SBR Bank 也满足）
+      - value: "SBR"
+        mode: token
+        case_sensitive: true
+        remote_search: false
+        require_any_within:
+          window_chars: 120
+          terms: ["ORBIT", "Springfield", "春田", "样本", "样本品牌", "Sample Brand"]
+
+  fraud_boosters:
+    role: booster
+    category: fraud_scam
+    terms: ["loan offer", "processing fee", "grant approval", "job offer", "visa fee",
+            "低息贷款", "手续费", "保证金", "招聘", "内部名额", "高回报"]
+
+  press_boosters:
+    role: booster
+    category: negative_press
+    terms: ["scandal", "corruption", "lawsuit", "sanctions", "default", "investigation", "protest",
+            "丑闻", "腐败", "诉讼", "制裁", "违约", "调查", "抗议"]
+
+  negative:
+    role: negative
+    terms: ["MySQL SBR", "SBR Cluster", "Standard Business Registry of", "SBR Bank"]
+
+domains:
+  official: ["sbr.int"]
+  # 合法第三方：同缩写的 SBR Bank
+  known_lookalikes: ["sbrbank.com"]
+  brand_tokens: ["sbr", "samplebrand", "orbitbank"]
+  combo_affixes: ["loan", "loans", "grant", "grants", "career", "careers", "jobs", "hr",
+                  "login", "secure", "portal", "pay", "invest", "online", "verify",
+                  "account", "support", "official", "my", "web", "mail"]
+  fraud_affixes: ["loan", "loans", "grant", "grants", "pay", "invest", "verify", "login",
+                  "account"]
+  # ORBIT 主题的金融诈骗常冒用"样本银行"名义；orbit 单独出现或与其他词组合（exorbitant、orbit-music）不算
+  restricted_tokens:
+    orbit: ["fund", "funds", "bank", "invest", "investment", "pay", "loan", "loans",
+            "finance", "financial", "grant", "grants", "coin"]

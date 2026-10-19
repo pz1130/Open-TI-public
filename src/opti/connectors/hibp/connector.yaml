@@ -1,0 +1,31 @@
+id: hibp
+name: "Have I Been Pwned 域名搜索"
+version: 0.1.0
+category: breach
+kind: [poll]
+tier: paid
+entrypoint: "opti.connectors.hibp.connector:HibpConnector"
+homepage: https://haveibeenpwned.com/API/v3
+tos_url: https://haveibeenpwned.com/API/v3#AcceptableUse
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: domestic
+pii_risk: high
+default_enabled: false
+credentials:
+  - { name: api_key, required: true, description: "HIBP API 密钥（域名须先在 HIBP 后台验证所有权）" }
+plans:
+  subscription:
+    rate_limit: { per_minute: 10 }
+schedule: { default: "17 */6 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    domains: { type: array, items: { type: string }, default: [] }
+    api_base: { type: string, default: "https://haveibeenpwned.com/api/v3" }
+  additionalProperties: false
+outputs: [breach]
+compliance_notes: |
+  只查询使用机构已在 HIBP 后台验证所有权的邮箱域名；HIBP 只返回"哪些邮箱出现在哪些泄露事件中"，不含口令。
+  邮箱属于员工个人信息：境内运行，只保存在 exposed_account 中（受限访问、到期删除），只经工单通道推给 IT。
+  泄露地址超过 10 个的域名需要 HIBP 付费订阅；免费方案见 hibp_notify。

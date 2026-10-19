@@ -1,0 +1,8 @@
+# 在 feeds 中列出使用机构关心的媒体、监管机构、CERT 公告的 RSS / Atom 地址。示例：
+#   - { url: "https://www.example-news.org/rss/business.xml", name: "Example News", language: en }
+#   - { url: "https://cert.example.org/advisories.atom", name: "Example CERT", fetch_all: true }
+enabled: true
+license_approved: true
+license_ref: "PUBLIC-FEEDS"
+config:
+  feeds: []

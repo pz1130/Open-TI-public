@@ -1,0 +1,31 @@
+id: dmarc
+name: "DMARC 聚合报告（Microsoft Graph 只读）"
+version: 0.1.0
+category: phishing
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.dmarc.connector:DmarcConnector"
+homepage: https://datatracker.ietf.org/doc/html/rfc7489
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: domestic
+default_enabled: false
+credentials:
+  - { name: tenant_id, required: true, secret: false }
+  - { name: client_id, required: true, secret: false }
+  - { name: client_secret, required: true }
+schedule: { default: "40 * * * *", min_interval_seconds: 1800 }
+config_schema:
+  type: object
+  required: [mailbox]
+  properties:
+    mailbox: { type: string, minLength: 3 }
+    folder: { type: string, default: "Inbox" }
+    authorized_networks: { type: array, items: { type: string }, default: [] }
+    authority: { type: string, default: "https://login.microsoftonline.com" }
+    graph: { type: string, default: "https://graph.microsoft.com/v1.0" }
+  additionalProperties: false
+outputs: [ip]
+compliance_notes: |
+  读取使用机构自己的 DMARC rua 邮箱（需邮件团队在 DNS 中配置 rua），只读、境内运行。
+  报告来自外部发件方：XML 禁止 DTD 与实体、解压后不超过 20 MB；只记录对齐未通过的来源 IP 与数量。

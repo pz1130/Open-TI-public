@@ -1,0 +1,27 @@
+id: ransomlook
+name: "RansomLook 勒索团伙帖子"
+version: 0.1.0
+category: ransomware
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.ransomlook.connector:RansomLookConnector"
+homepage: https://www.ransomlook.io
+commercial_use: unknown
+last_reviewed: 2026-10-03
+egress: any
+pii_risk: low
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 6 }
+schedule: { default: "35 */2 * * *", min_interval_seconds: 1800 }
+config_schema:
+  type: object
+  properties:
+    api_base: { type: string, default: "https://www.ransomlook.io/api" }
+    link_hosts: { type: array, items: { type: string }, default: ["www.ransomlook.io", "ransomlook.io"] }
+  additionalProperties: false
+outputs: [leak_post]
+compliance_notes: |
+  只读取帖子元数据，不访问泄露站、不下载泄露数据。公共实例的使用条款未明确，默认不批准；
+  可自建 RansomLook 实例（开源）后把 api_base 指向自建实例再批准。

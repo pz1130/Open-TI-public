@@ -1,0 +1,17 @@
+# 告警路由初始值：在 Web“配置 → 告警推送”中保存后以数据库为准，本文件不再生效。
+# 未在 Web 保存前，密钥从环境变量读取（放在 .env 中）：
+#   OPTI_SECRET_ALERTING_TEAMS_WEBHOOK_URL、OPTI_SECRET_ALERTING_SMTP_USERNAME、OPTI_SECRET_ALERTING_SMTP_PASSWORD
+public_base_url: "http://localhost:8000"   # S1-E 研判界面上线后改为实际地址
+immediate: [critical, high]
+digest: [medium]                 # 日报中汇总的告警级别
+report_language: zh-CN
+report_timezone: Asia/Shanghai
+teams:
+  enabled: true
+email:
+  enabled: false
+  smtp_host: "smtp.example.org"   # 填写本机构的邮件中继地址
+  smtp_port: 25
+  starttls: true
+  sender: "ti-alerts@example.org"
+  recipients: []

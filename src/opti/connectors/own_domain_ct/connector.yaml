@@ -1,0 +1,25 @@
+id: own_domain_ct
+name: "使用机构 自有域名证书监控"
+version: 0.1.0
+category: ct
+kind: [stream]
+tier: free
+entrypoint: "opti.connectors.own_domain_ct.connector:OwnDomainCtConnector"
+homepage: https://github.com/d-Rickyy-b/certstream-server-go
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+schedule: { default: null, min_interval_seconds: 0 }
+config_schema:
+  type: object
+  properties:
+    url: { type: string, default: "ws://localhost:8080/" }
+    max_reconnects: { type: [integer, "null"], minimum: 0, default: null }
+    reconnect_max_delay: { type: number, minimum: 0, default: 60 }
+    approved_issuers: { type: array, items: { type: string }, default: [] }
+  additionalProperties: false
+outputs: [certificate]
+compliance_notes: |
+  只针对使用机构自身域名（设计文档 4.5 v0.2 新增）。批准的 CA 清单待使用机构提供（设计文档 24.2 第 3 题），
+  未配置时 issuer_approved 为 null，只记录不告警。

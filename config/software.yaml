@@ -1,0 +1,12 @@
+# 初始值：在 Web“配置”页保存后以数据库为准，本文件不再生效。
+# 本机构使用的软件与设备清单，只在平台加载，不下发到采集节点。
+# 与 CISA KEV 按"厂商 + 产品"完全相等匹配（忽略大小写与标点），不做模糊匹配；产品要逐个列出。
+# 名称要与 KEV 中的写法一致：KEV 导入后运行 opti kev-products --vendor <厂商> 查看。
+# 示例：
+#   - id: vpn-gateway
+#     vendor: "Fortinet"
+#     products: ["FortiOS", "FortiProxy"]
+#     tier: critical        # critical / high / normal
+#     exposed: true         # 面向互联网
+#     owner: "网络组"
+software: []

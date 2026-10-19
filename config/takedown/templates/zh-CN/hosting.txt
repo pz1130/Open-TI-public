@@ -1,0 +1,20 @@
+Subject: 滥用投诉：贵方网络中的 $domain 冒用 $org_name 名义（$category）
+
+$target_name 滥用处理团队：
+
+您好。我们是 $org_name（$org_website）。$legal_statement
+
+以下网站托管在贵方网络（IP：$ips），冒用本机构名义，属于$category。请依据贵方的可接受使用政策移除相关内容或暂停服务。
+
+  域名：$domain
+  网址：$url
+  首次发现：$first_seen
+
+证据摘要（截图与网页快照的采集时间与 SHA-256）：
+$evidence
+
+如需完整证据包或更多信息，请回复本邮件或联系 $org_contact。
+
+此致
+$signature
+$date

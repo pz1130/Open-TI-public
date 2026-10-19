@@ -1,0 +1,20 @@
+Subject: Abuse report: $domain on your network impersonating $org_name ($category)
+
+Dear $target_name abuse team,
+
+We are $org_name ($org_website). $legal_statement
+
+The website below is hosted on your network (IP: $ips) and impersonates our organization ($category). We kindly request that you remove the content or suspend the service in accordance with your acceptable use policy.
+
+  Domain: $domain
+  URL: $url
+  First seen: $first_seen
+
+Evidence summary (capture time and SHA-256 of screenshots and page snapshots):
+$evidence
+
+The full evidence package is available on request. Please reply to this message or contact $org_contact.
+
+Regards,
+$signature
+$date

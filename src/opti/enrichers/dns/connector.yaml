@@ -1,0 +1,20 @@
+id: dns
+name: "DNS 解析"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.dns.enricher:DnsEnricher"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+config_schema:
+  type: object
+  properties:
+    nameservers: { type: array, items: { type: string }, default: [] }
+    timeout: { type: number, minimum: 0.1, default: 5 }
+  additionalProperties: false
+outputs: [dns]
+compliance_notes: |
+  被动 DNS 查询。生产环境建议使用自建递归解析器（设计文档 10.2），避免向公共解析器暴露监测对象。

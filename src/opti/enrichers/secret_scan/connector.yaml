@@ -1,0 +1,35 @@
+id: secret_scan
+name: "公开仓库密钥扫描（gitleaks）"
+version: 0.1.0
+category: code
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.secret_scan.enricher:SecretScanEnricher"
+homepage: https://github.com/gitleaks/gitleaks
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: overseas
+pii_risk: medium
+default_enabled: false
+credentials:
+  - { name: github_token, required: false, description: "只用于查询仓库信息（提高 API 配额）" }
+plans:
+  free:
+    rate_limit: { per_minute: 20 }
+config_schema:
+  type: object
+  properties:
+    depth: { type: integer, minimum: 1, maximum: 1000, default: 100 }
+    max_kb: { type: integer, minimum: 1, default: 100000 }
+    clone_timeout: { type: number, minimum: 5, maximum: 80, default: 40 }
+    scan_timeout: { type: number, minimum: 5, maximum: 80, default: 40 }
+    git_bin: { type: string, default: "git" }
+    gitleaks_bin: { type: string, default: "gitleaks" }
+    clone_base: { type: string, default: "https://github.com" }
+    api_base: { type: string, default: "https://api.github.com" }
+  additionalProperties: false
+outputs: [secrets]
+compliance_notes: |
+  只扫描代码搜索命中本机构信息的公开仓库；gitleaks 不验证密钥，平台也绝不验证。
+  密钥原值只在采集节点临时工作区与内存中短暂存在，回传前换成前 4 个字符 + HMAC 指纹；
+  回传的命中行前后各 3 行上下文与仓库公开信息中，密钥同样已遮蔽。

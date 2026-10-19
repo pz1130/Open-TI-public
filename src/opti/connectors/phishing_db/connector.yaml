@@ -1,0 +1,26 @@
+id: phishing_db
+name: "Phishing.Database 钓鱼域名与链接（每日新增）"
+version: 0.1.0
+category: phishing
+kind: [batch]
+tier: free
+entrypoint: "opti.connectors.phishing_db.connector:PhishingDbConnector"
+homepage: https://github.com/Phishing-Database/Phishing.Database
+tos_url: https://github.com/Phishing-Database/Phishing.Database/blob/master/LICENSE
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+schedule: { default: "15 2 * * *", min_interval_seconds: 43200 }
+config_schema:
+  type: object
+  properties:
+    lists:
+      type: array
+      items: { enum: [links, domains] }
+      default: [links, domains]
+  additionalProperties: false
+outputs: [url, domain]
+compliance_notes: |
+  MIT 许可的汇总列表，只下载"当天新增"文件（体积小，避免下载数百 MB 的全量文件）。
+  汇总来源较多、质量参差，命中仍需探测与研判；只下载列表，不访问列表中的地址。

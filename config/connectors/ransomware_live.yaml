@@ -1,0 +1,4 @@
+# 免费接口仅限个人用途（设计文档 2.4、24.4 第 14 问），默认不批准；采购 PRO 后改 plan: pro 并批准
+enabled: false
+license_approved: false
+config: {}

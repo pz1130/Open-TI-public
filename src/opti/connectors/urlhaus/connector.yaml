@@ -1,0 +1,24 @@
+id: urlhaus
+name: "URLhaus 恶意 URL（abuse.ch）"
+version: 0.1.0
+category: threat_feed
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.urlhaus.connector:UrlhausConnector"
+homepage: https://urlhaus.abuse.ch
+tos_url: https://abuse.ch/terms-of-use/
+commercial_use: restricted
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: false
+credentials:
+  - { name: auth_key, required: true, description: "abuse.ch Auth-Key（免费注册，2025-06-30 起必需）" }
+plans:
+  free:
+    rate_limit: { per_minute: 10 }
+schedule: { default: "*/15 * * * *", min_interval_seconds: 900 }
+config_schema: { type: object, additionalProperties: false }
+outputs: [url]
+compliance_notes: |
+  abuse.ch 社区 API 在"公平使用"下免费，商业/营利用途可能需要商业 API（设计文档 2.4），法务确认前默认不批准。
+  URLhaus 收录的多为恶意软件分发 URL；只有 URL 中出现使用机构品牌时才回传。只调用列表接口，不访问 URL。

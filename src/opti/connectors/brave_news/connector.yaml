@@ -1,0 +1,35 @@
+id: brave_news
+name: "Brave 新闻搜索"
+version: 0.1.0
+category: search_news
+kind: [poll]
+tier: freemium
+entrypoint: "opti.connectors.brave_news.connector:BraveNewsConnector"
+homepage: https://brave.com/search/api/
+commercial_use: restricted
+last_reviewed: 2026-10-03
+egress: overseas
+pii_risk: low
+default_enabled: false
+credentials:
+  - { name: api_key, required: true, description: "Brave Search API 订阅令牌（需绑卡；可设 0 预付与用量上限）" }
+plans:
+  free:
+    rate_limit: { per_second: 1 }
+schedule: { default: "20 */6 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    max_queries: { type: integer, minimum: 1, maximum: 20, default: 5 }
+    max_articles: { type: integer, minimum: 0, maximum: 200, default: 30 }
+    freshness: { type: string, enum: [pd, pw, pm], default: pd }
+    article_timeout: { type: number, minimum: 1, maximum: 30, default: 10 }
+    api_base: { type: string, default: "https://api.search.brave.com/res/v1/news/search" }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  付费接口（每月赠送少量额度），结果的存储与使用受 Brave 条款约束，需法务确认后批准。
+  每轮查询数有上限；第一个查询失败（额度用完或限流）即停止本轮。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text]

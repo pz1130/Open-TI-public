@@ -1,0 +1,35 @@
+id: hibp_notify
+name: "HIBP 免费域名通知（Microsoft Graph 只读）"
+version: 0.1.0
+category: breach
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.hibp_notify.connector:HibpNotifyConnector"
+homepage: https://haveibeenpwned.com/DomainSearch
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: domestic
+pii_risk: low
+default_enabled: false
+credentials:
+  - { name: tenant_id, required: true, secret: false, description: "Entra ID 租户 ID" }
+  - { name: client_id, required: true, secret: false, description: "应用（客户端）ID" }
+  - { name: client_secret, required: true, description: "客户端密钥" }
+schedule: { default: "25 * * * *", min_interval_seconds: 1800 }
+config_schema:
+  type: object
+  required: [mailbox]
+  properties:
+    mailbox: { type: string, minLength: 3 }
+    folder: { type: string, default: "Inbox" }
+    senders: { type: array, items: { type: string }, default: ["noreply@haveibeenpwned.com"] }
+    require_dmarc_pass: { type: boolean, default: true }
+    domains: { type: array, items: { type: string }, default: [] }
+    api_base: { type: string, default: "https://haveibeenpwned.com/api/v3" }
+    authority: { type: string, default: "https://login.microsoftonline.com" }
+    graph: { type: string, default: "https://graph.microsoft.com/v1.0" }
+  additionalProperties: false
+outputs: [breach]
+compliance_notes: |
+  读取使用机构在 HIBP 后台验证域名时登记的通知邮箱（只读）。通知只含事件与数量，不含账户明细；
+  只接受 DMARC 通过、来自 HIBP 的邮件，事件名只匹配 HIBP 公开目录。

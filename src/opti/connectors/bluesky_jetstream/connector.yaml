@@ -1,0 +1,27 @@
+id: bluesky_jetstream
+name: "Bluesky Jetstream 公开帖子"
+version: 0.1.0
+category: social
+kind: [stream]
+tier: free
+entrypoint: "opti.connectors.bluesky_jetstream.connector:BlueskyJetstreamConnector"
+homepage: https://github.com/bluesky-social/jetstream
+tos_url: https://bsky.social/about/support/tos
+commercial_use: unknown
+last_reviewed: 2026-10-04
+egress: overseas
+pii_risk: medium
+default_enabled: false
+schedule: { default: null, min_interval_seconds: 0 }
+config_schema:
+  type: object
+  properties:
+    url: { type: string, default: "wss://jetstream1.us-east.bsky.network/subscribe" }
+    max_reconnects: { type: [integer, "null"], minimum: 0, default: null }
+    reconnect_max_delay: { type: number, minimum: 0, default: 60 }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  只消费 app.bsky.feed.post 的公开 create 事件，在采集节点筛选项目相关文本。
+  不采集账号资料、关注关系或未命中帖子；平台仅保存帖子 URL、命中片段和哈希。
+  使用前须审查 Bluesky 服务条款、数据保护要求并在实例配置中批准。

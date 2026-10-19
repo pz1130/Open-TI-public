@@ -1,0 +1,28 @@
+id: abuseipdb
+name: "AbuseIPDB IP 信誉富化"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: paid
+entrypoint: "opti.enrichers.abuseipdb.enricher:AbuseIpdbEnricher"
+homepage: https://docs.abuseipdb.com/
+tos_url: https://www.abuseipdb.com/legal.html
+commercial_use: restricted
+last_reviewed: 2026-10-05
+egress: overseas
+pii_risk: low
+default_enabled: false
+credentials:
+  - { name: api_key, required: true, description: "机构 Basic 或更高付费方案的 API Key" }
+plans:
+  basic:
+    rate_limit: { per_minute: 10 }
+config_schema:
+  type: object
+  additionalProperties: false
+outputs: [ip]
+compliance_notes: |
+  AbuseIPDB 条款禁止 Free/Individual 方案用于商业用途；机构仅可在适当的付费授权与许可批准后启用。
+  仅调用单 IP 的只读 Check 接口，不加 verbose，不读取举报正文、举报者信息，也不上报或拉取黑名单。
+  只对已收到的公网 IP 指标查询，结果只作研判上下文，不自动加减分或阻断。
+  供应商执行每日额度；429 后当前 worker 冷却 24 小时，跨 worker 总额度需部署侧管理。

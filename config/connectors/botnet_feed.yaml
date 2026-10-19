@@ -1,0 +1,4 @@
+# CC0 列表；部署节点确认网络出口和告警研判流程后启用。
+enabled: false
+license_approved: false
+config: {}

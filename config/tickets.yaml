@@ -1,0 +1,32 @@
+# 初始值：在 Web“配置”页保存后以数据库为准，本文件不再生效。
+# 工单推送（设计文档 12、D8）。使用机构确认工单系统前，先用通用方式对接：
+#   webhook：POST JSON 到 OPTI_SECRET_TICKETS_WEBHOOK_URL，带 HMAC 签名（OPTI_SECRET_TICKETS_SIGNING_KEY，至少 32 个字符）
+#   email：发邮件到 email_to（使用 config/alerting.yaml 的 SMTP 设置），主题带 [OPTI-ALERT-<告警编号>]
+#   jira / servicenow：直接在 Jira Cloud 或 ServiceNow 建单，只推送不回写（见 docs/runbook.md“对接 Jira Cloud / ServiceNow”）
+# 工单系统可回调 POST /api/v1/integrations/tickets（同样的签名方式）写回工单编号与状态。
+enabled: false
+mode: webhook
+auto_push: []          # 自动推送的严重级别，如 [critical, high]；为空表示只人工推送
+id_field: ticket_id    # Webhook 响应 JSON 中工单编号的字段名，支持 a.b 形式的嵌套
+email_to: []
+status_map:            # 回调中的工单状态 → 告警状态（open / acknowledged / closed）；未列出的状态只记录、不改告警
+  new: open
+  in_progress: acknowledged
+  resolved: closed
+  closed: closed
+include_accounts: false  # 仅 jira / servicenow：凭据暴露工单是否列出员工邮箱
+proxy: null              # 仅 jira / servicenow：出口代理
+# jira:
+#   base_url: https://example.atlassian.net
+#   email: integration@example.org          # API Token 放在 OPTI_SECRET_TICKETS_JIRA_API_TOKEN
+#   project_key: SEC
+#   issue_type: Task
+#   priority_map: {critical: Highest, high: High}
+#   extra_fields: {labels: [drp]}
+# servicenow:
+#   base_url: https://example.service-now.com
+#   table: incident                          # 须继承 task
+#   auth: basic                              # basic（OPTI_SECRET_TICKETS_SERVICENOW_PASSWORD）或 oauth（client_id + OPTI_SECRET_TICKETS_SERVICENOW_CLIENT_SECRET）
+#   username: opti.integration
+#   urgency_impact_map: {critical: {urgency: 1, impact: 1}}
+#   extra_fields: {assignment_group: Security Operations}

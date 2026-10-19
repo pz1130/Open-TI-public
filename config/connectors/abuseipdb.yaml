@@ -1,0 +1,5 @@
+# 仅在机构取得 Basic 或更高付费授权后配置 OPTI_SECRET_ABUSEIPDB_API_KEY 并启用。
+enabled: false
+license_approved: false
+plan: basic
+config: {}

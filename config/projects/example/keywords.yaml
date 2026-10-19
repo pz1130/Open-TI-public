@@ -1,0 +1,20 @@
+# 中性示例规则；生产部署必须通过 OPTI_RULES 指向机构自己的授权规则。
+project: example-brand-protection
+authorization_ref: EXAMPLE-ONLY
+languages: [en]
+sets:
+  brand:
+    terms: ["Example Organization"]
+  fraud_boosters:
+    role: booster
+    category: fraud_scam
+    terms: ["loan offer", "processing fee", "job offer", "grant approval"]
+  press_boosters:
+    role: booster
+    category: negative_press
+    terms: ["scandal", "lawsuit", "investigation"]
+domains:
+  official: ["example.org"]
+  brand_tokens: ["exampleorganization"]
+  combo_affixes: ["secure", "login", "support", "loans"]
+  fraud_affixes: ["loans"]

@@ -1,0 +1,29 @@
+id: threatfox
+name: "ThreatFox IOC（abuse.ch）"
+version: 0.1.0
+category: threat_feed
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.threatfox.connector:ThreatFoxConnector"
+homepage: https://threatfox.abuse.ch
+tos_url: https://abuse.ch/terms-of-use/
+commercial_use: restricted
+last_reviewed: 2026-10-03
+egress: overseas
+default_enabled: false
+credentials:
+  - { name: auth_key, required: true, description: "abuse.ch Auth-Key（免费注册，与 URLhaus 共用）" }
+plans:
+  free:
+    rate_limit: { per_minute: 10 }
+schedule: { default: "40 * * * *", min_interval_seconds: 1800 }
+config_schema:
+  type: object
+  properties:
+    min_confidence: { type: integer, minimum: 0, maximum: 100, default: 50 }
+    api_base: { type: string, default: "https://threatfox.abuse.ch/export/json/recent/" }
+  additionalProperties: false
+outputs: [url]
+compliance_notes: |
+  abuse.ch 社区数据在"公平使用"下免费，商业/营利用途可能需要商业 API（设计文档 2.4），法务确认前默认不批准。
+  只读取最近 48 小时的导出文件，只回传含本机构品牌的域名与 URL；不访问 IOC。

@@ -1,0 +1,15 @@
+url,expected,note
+https://sbr-loans.com/login,domain,主机名仿冒
+https://sbr-loans.github.io/apply,domain,免费托管平台的独立子域
+https://secure-login.xyz/sbr/login.php,url,路径中的短品牌词
+https://sites.google.com/view/samplebrand-grants,url,共享托管平台
+https://example.org/sample-brand/apply,url,长品牌词跨分隔符
+https://evil.top/orbitbank-invest,url,别称
+https://sbr.int@evil.top/login,url,userinfo 伪装
+http://203.0.113.5/sbr/login,url,IP 主机
+https://sbr.int/careers,none,官方域名
+https://www.sbrbank.com/sbr-loans,none,已知合法相似方
+https://example.org/crossbrace/login,none,子串包含 sbr
+https://evil.top/?utm_source=sbr,none,跟踪参数
+https://evil.top/orbit-summit,none,受限品牌词单独出现
+https://example.org/news,none,无关

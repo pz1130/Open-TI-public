@@ -1,0 +1,25 @@
+id: botnet_feed
+name: "Feodo / SSLBL 关联富化"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.botnet_feed.enricher:BotnetFeedEnricher"
+homepage: https://feodotracker.abuse.ch/blocklist/
+tos_url: https://sslbl.abuse.ch/blacklist/
+commercial_use: allowed
+last_reviewed: 2026-10-04
+egress: overseas
+pii_risk: low
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 4 }
+config_schema:
+  type: object
+  additionalProperties: false
+outputs: [domain]
+compliance_notes: |
+  只读取 Feodo 推荐的活跃/近期 C2 IP JSON 和 SSLBL 证书 SHA1 CSV，二者公布 CC0 商用条款。
+  仅对已有品牌候选域名做 DNS/TLS 关联，不对整份全球列表创建告警或阻断项。
+  共享 IP 和历史证书可能有误报；命中只作研判上下文，不单独加分。

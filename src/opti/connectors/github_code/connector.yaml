@@ -1,0 +1,33 @@
+id: github_code
+name: "GitHub 代码搜索"
+version: 0.1.0
+category: code
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.github_code.connector:GithubCodeConnector"
+homepage: https://docs.github.com/en/rest/search/search#search-code
+tos_url: https://docs.github.com/en/site-policy/github-terms/github-terms-of-service
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: overseas
+pii_risk: medium
+default_enabled: false
+credentials:
+  - { name: token, required: true, description: "GitHub 令牌（仅公开仓库只读）" }
+plans:
+  free:
+    rate_limit: { per_minute: 9 }
+schedule: { default: "45 */6 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    internal_terms: { type: array, items: { type: string }, default: [] }
+    exclude_owners: { type: array, items: { type: string }, default: [] }
+    max_queries: { type: integer, minimum: 1, maximum: 50, default: 10 }
+    max_pages: { type: integer, minimum: 1, maximum: 10, default: 1 }
+    api_base: { type: string, default: "https://api.github.com" }
+  additionalProperties: false
+outputs: [code_hit]
+compliance_notes: |
+  只搜索公开代码；文件片段在采集节点上脱敏后回传。
+  internal_terms 只放内部主机名、项目代号等非个人信息；exclude_owners 放本机构自己的 GitHub 账号。

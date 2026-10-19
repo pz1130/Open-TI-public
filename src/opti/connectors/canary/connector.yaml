@@ -1,0 +1,15 @@
+id: canary
+name: "克隆站金丝雀回调"
+version: 0.1.0
+category: phishing
+kind: [on_demand]
+tier: free
+entrypoint: "opti.connectors.canary.connector:CanaryConnector"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: any
+default_enabled: true
+outputs: [domain]
+compliance_notes: |
+  使用机构在自己官网嵌入的脚本，在页面被复制到其他域名时报信。只记录克隆站主机名，
+  不记录访问者 IP、完整 URL 或 Cookie（设计文档 2.5、4.12）。

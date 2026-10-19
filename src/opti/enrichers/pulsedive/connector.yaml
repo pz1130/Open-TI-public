@@ -1,0 +1,31 @@
+id: pulsedive
+name: "Pulsedive 指标信誉富化"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: paid
+entrypoint: "opti.enrichers.pulsedive.enricher:PulsediveEnricher"
+homepage: https://docs.pulsedive.com/api/indicator/get-by-value
+tos_url: https://pulsedive.com/terms
+commercial_use: restricted
+last_reviewed: 2026-10-05
+egress: overseas
+pii_risk: low
+default_enabled: false
+credentials:
+  - { name: api_key, required: true, description: "机构 Team/Business 等商业 API 方案的 Key" }
+plans:
+  team:
+    rate_limit: { per_second: 1 }
+  business:
+    rate_limit: { per_second: 1 }
+config_schema:
+  type: object
+  additionalProperties: false
+outputs: [domain, ip]
+compliance_notes: |
+  免费账号只供非商业用途；机构接入需商业 API 方案、许可批准和有效 API Key。
+  仅对已收到的公开域名和公网 IP 调用 GET indicator.php；不查询 URL，不执行 Analyze/扫描、Explore 或 Feed 批量拉取。
+  API Key 按官方要求放在查询参数中；框架密钥过滤器须遮盖 HTTP 日志中的密钥。
+  响应只保留风险等级、人工调整、退役状态和最后出现时间，不入库评论、WHOIS、Cookie 或其他明细。
+  仅作研判上下文，不自动加减分或阻断。每 worker 429 后冷却 24 小时；跨 worker 月额度需部署侧管理。

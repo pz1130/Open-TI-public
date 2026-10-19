@@ -1,0 +1,6 @@
+# 没有 HIBP 订阅时使用：在 HIBP 后台为本机构域名开启通知，通知发到下面的邮箱
+enabled: false
+license_approved: true
+license_ref: "OWN-DATA"
+config:
+  mailbox: "${OPTI_HIBP_NOTIFY_MAILBOX:-security@example.org}"

@@ -1,0 +1,6 @@
+# 填写举报邮箱地址并配置凭据后启用（设计文档 4.12）。凭据：OPTI_SECRET_REPORT_MAILBOX_TENANT_ID/CLIENT_ID/CLIENT_SECRET
+enabled: false
+license_approved: true
+license_ref: "OWN-DATA"
+config:
+  mailbox: "${OPTI_REPORT_MAILBOX:-phishing@example.org}"

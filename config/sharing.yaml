@@ -1,0 +1,22 @@
+# 初始值：在 Web“配置”页保存后以数据库为准，本文件不再生效。
+# 数据外送（设计文档 6.4、12）。密钥可在 Web 配置，也可从 .env 读取：
+#   OPTI_SECRET_SIEM_SIGNING_KEY（Webhook 签名，至少 32 字符）、OPTI_SECRET_SIEM_WEBHOOK_TOKEN（Splunk HEC / Elastic 令牌）
+stix:
+  tlp: amber              # white / green / amber / red
+  min_severity: medium    # 导出的最低严重级别
+siem:
+  min_severity: medium    # 推送的最低严重级别
+  categories: []          # 为空表示全部类别
+  syslog:
+    enabled: false
+    host: siem.example.org
+    port: 6514
+    protocol: tls         # tls / tcp / udp
+    ca_file: ""
+    app_name: opti
+  webhook:
+    enabled: false
+    url: https://siem.example.org/opti
+    format: json          # json（HMAC 签名）/ splunk_hec
+    token_header: Authorization
+    token_prefix: ""

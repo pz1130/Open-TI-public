@@ -1,0 +1,5 @@
+# 机构审核国家商店与 Apple Search API 使用条件后填写并启用。
+enabled: false
+license_approved: false
+config:
+  countries: []

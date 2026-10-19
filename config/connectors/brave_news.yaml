@@ -1,0 +1,4 @@
+# 在采集节点 .env.collector 中设置 OPTI_SECRET_BRAVE_NEWS_API_KEY，并经法务确认条款后批准
+enabled: false
+license_approved: false
+config: {}

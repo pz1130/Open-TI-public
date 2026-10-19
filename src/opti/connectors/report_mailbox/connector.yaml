@@ -1,0 +1,36 @@
+id: report_mailbox
+name: "员工钓鱼举报邮箱（Microsoft Graph 只读）"
+version: 0.1.0
+category: phishing
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.report_mailbox.connector:ReportMailboxConnector"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: domestic
+pii_risk: medium
+default_enabled: false
+credentials:
+  - { name: tenant_id, required: true, secret: false, description: "Entra ID 租户 ID" }
+  - { name: client_id, required: true, secret: false, description: "应用（客户端）ID" }
+  - { name: client_secret, required: true, description: "客户端密钥" }
+schedule: { default: "*/5 * * * *", min_interval_seconds: 120 }
+config_schema:
+  type: object
+  required: [mailbox]
+  properties:
+    mailbox: { type: string, minLength: 3 }
+    folder: { type: string, default: "Inbox" }
+    ignore_domains:
+      type: array
+      items: { type: string }
+      default: [microsoft.com, office.com, office365.com, outlook.com, live.com, aka.ms,
+                sharepoint.com, w3.org, apple.com, google.com, gstatic.com]
+    authority: { type: string, default: "https://login.microsoftonline.com" }
+    graph: { type: string, default: "https://graph.microsoft.com/v1.0" }
+  additionalProperties: false
+outputs: [url, domain]
+compliance_notes: |
+  员工转发的可疑邮件属于工作邮件，可能含个人信息：只在境内运行（egress: domestic），只读（Mail.Read，
+  由管理员用 ApplicationAccessPolicy 限定到举报邮箱），不移动、不删除、不标记邮件；只提取链接、发件域、
+  附件哈希与认证结果，不保存正文与举报人地址；附件绝不打开（设计文档 2.3、2.5、4.12）。

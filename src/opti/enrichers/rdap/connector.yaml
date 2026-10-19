@@ -1,0 +1,23 @@
+id: rdap
+name: "RDAP 注册信息"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.rdap.enricher:RdapEnricher"
+homepage: https://data.iana.org/rdap/dns.json
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: any
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_second: 1 }
+config_schema:
+  type: object
+  properties:
+    bootstrap_url: { type: string, default: "https://data.iana.org/rdap/dns.json" }
+  additionalProperties: false
+outputs: [registration]
+compliance_notes: |
+  注册信息为公开数据；GDPR 后注册人信息多被隐藏，只用注册时间、注册商与滥用联系人（下架用）。

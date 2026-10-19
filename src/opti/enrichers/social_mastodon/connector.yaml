@@ -1,0 +1,32 @@
+id: social_mastodon
+name: "Mastodon 冒充账号搜索"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.social_mastodon.enricher:MastodonEnricher"
+homepage: https://docs.joinmastodon.org/methods/search/#v2
+commercial_use: unknown
+last_reviewed: 2026-10-14
+egress: overseas
+pii_risk: medium
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 30 }
+config_schema:
+  type: object
+  properties:
+    instances:
+      type: array
+      items: { type: string }
+      minItems: 1
+      maxItems: 10
+      default: ["mastodon.social"]
+  additionalProperties: false
+outputs: [social_profile]
+compliance_notes: |
+  只为管理员登记的受保护账号查询其资料，并在审核过的实例上用未登录的公开接口搜索账号资料。
+  Mastodon 没有全网搜索，只覆盖所配置实例已知的账号；实例返回 401/403 时一小时内不再请求。
+  不采集帖子、关注关系或粉丝数；头像只从所配置实例下载并在内存中计算哈希，不保存图片。
+  命中只作人工复核线索。使用前须审查各实例规则并在实例配置中批准。

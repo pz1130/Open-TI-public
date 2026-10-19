@@ -1,0 +1,20 @@
+id: subdomains
+name: "自有域名子域名发现（CT）"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.subdomains.enricher:SubdomainsEnricher"
+homepage: https://crt.sh/
+commercial_use: allowed
+last_reviewed: 2026-10-14
+egress: overseas
+default_enabled: true
+config_schema:
+  type: object
+  properties: {}
+  additionalProperties: false
+outputs: [domain]
+compliance_notes: |
+  只用于用户明确配置的自有域名。查询公开 CT 历史记录发现主机，不做字典爆破。
+  历史证书只用于发现域名，当前证书有效期由 TLS 握手获取。

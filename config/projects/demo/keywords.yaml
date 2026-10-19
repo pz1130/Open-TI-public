@@ -1,0 +1,12 @@
+# 演示规则：用常见品牌词在实时 CT 流中快速看到命中，验证链路。不用于生产。
+project: demo
+authorization_ref: "DEMO-ONLY"
+languages: [en]
+sets:
+  brand:
+    terms: ["PayPal"]
+domains:
+  official: ["paypal.com"]
+  brand_tokens: ["paypal"]
+  combo_affixes: ["secure", "verify", "account", "support", "login"]
+  fraud_affixes: ["verify", "account"]

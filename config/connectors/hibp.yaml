@@ -1,0 +1,7 @@
+# 需要 HIBP 订阅与 OPTI_SECRET_HIBP_API_KEY；domains 为空时使用关键词规则中的官方域名
+enabled: false
+license_approved: true
+license_ref: "HIBP-SUBSCRIPTION"
+plan: subscription
+config:
+  domains: []

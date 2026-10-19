@@ -1,0 +1,15 @@
+id: public_report
+name: "公众反诈举报"
+version: 0.1.0
+category: phishing
+kind: [on_demand]
+tier: free
+entrypoint: "opti.connectors.public_report.connector:PublicReportConnector"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: any
+pii_risk: medium
+default_enabled: true
+outputs: [url, report]
+compliance_notes: |
+  公众经使用机构官网提交的举报，由网站后端签名后转交。联系方式属于个人信息，默认 90 天后清除（设计文档 2.5）。

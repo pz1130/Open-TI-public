@@ -1,0 +1,9 @@
+# 初始值：在 Web“配置”页保存后以数据库为准，本文件不再生效。
+# Example only. Replace with this institution's critical suppliers.
+vendors:
+  - id: example-cloud
+    name: "Example Cloud Services Ltd"
+    aliases: ["Example Cloud"]
+    domains: ["example-cloud.example"]
+    tier: critical
+    owner: "IT 基础设施组"

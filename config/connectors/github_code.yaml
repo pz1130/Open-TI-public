@@ -1,0 +1,7 @@
+# Set OPTI_SECRET_GITHUB_CODE_TOKEN on the collector before enabling.
+enabled: false
+license_approved: true
+license_ref: "GITHUB-TOS"
+config:
+  internal_terms: []
+  exclude_owners: []

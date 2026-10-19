@@ -1,0 +1,7 @@
+enabled: true
+license_approved: true
+license_ref: "DEV-DEFAULT"
+config:
+  sandbox_url: "${OPTI_SANDBOX_URL:-http://browser:8000}"
+  logo_hashes: []  # 可用 opti logo-hash <本地Logo图片> 生成 dHash，再填写 {name, dhash64}
+  favicon_hashes: []  # 可用 opti favicon-hash <本地图标> 生成 mmh3，再填写 {name, mmh3}

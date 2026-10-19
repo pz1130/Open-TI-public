@@ -1,0 +1,25 @@
+id: http_probe
+name: "网页探测（标题、登录表单、品牌词）"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.http_probe.enricher:HttpProbeEnricher"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_second: 2 }
+config_schema:
+  type: object
+  properties:
+    timeout: { type: number, minimum: 0.1, default: 10 }
+    total_timeout: { type: number, minimum: 0.1, default: 30 }  # 含重定向与 http 回退的总时长
+    allow_private_targets: { type: boolean, default: false }  # 仅供测试；生产必须为 false
+  additionalProperties: false
+outputs: [page]
+compliance_notes: |
+  只对已命中的可疑域名发一次 GET 请求读取首页：不保存 Cookie、不执行 JavaScript、不提交表单、
+  只解析 HTML，其他类型的内容不解析不保存（设计文档 2.8）。必须在境外采集节点运行，不暴露使用机构出口 IP。

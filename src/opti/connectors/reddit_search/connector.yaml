@@ -1,0 +1,37 @@
+id: reddit_search
+name: "Reddit 官方 API 公开帖子搜索"
+version: 0.1.0
+category: social
+kind: [poll]
+tier: freemium
+entrypoint: "opti.connectors.reddit_search.connector:RedditSearchConnector"
+homepage: https://www.reddit.com/dev/api/
+tos_url: https://redditinc.com/policies/data-api-terms
+commercial_use: restricted
+last_reviewed: 2026-10-04
+egress: overseas
+pii_risk: medium
+default_enabled: false
+credentials:
+  - { name: client_id, required: true, description: "经 Reddit 批准的 OAuth 客户端 ID" }
+  - { name: client_secret, required: true, description: "OAuth 客户端密钥" }
+plans:
+  approved:
+    rate_limit: { per_minute: 30 }
+schedule: { default: "5,35 * * * *", min_interval_seconds: 900 }
+config_schema:
+  type: object
+  properties:
+    user_agent: { type: string, minLength: 10 }
+    max_queries: { type: integer, minimum: 1, maximum: 20, default: 5 }
+    max_pages: { type: integer, minimum: 1, maximum: 10, default: 2 }
+  required: [user_agent]
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  Reddit 当前要求先获得明确的 Data API 访问批准；商业用途还需单独协议。
+  仅使用获批的官方 OAuth API，检索公开帖子，不抓取 HTML、评论或用户档案。
+  不保存作者、全文及未命中帖子；输出仅保留链接、命中片段与去重哈希。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text]

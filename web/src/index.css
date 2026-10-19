@@ -1,0 +1,1936 @@
+/* ==========================================================================
+   OPEN-TI — "Obsidian / Ion" design system
+   石墨黑底 + 单一离子蓝紫强调色；严重级别（红 / 橙 / 黄 / 绿）是界面上唯一的「彩色」。
+   动效集中在本文件末尾，始终播放（不受系统「减少动态效果」设置影响），标签页隐藏或移出视口时由脚本暂停画布动画。
+   ========================================================================== */
+
+:root {
+  --bg: #08090d;
+  --bg-2: #0c0e14;
+  --panel: rgba(18, 20, 28, 0.72);
+  --panel-solid: #12141c;
+  --panel-hover: rgba(24, 27, 38, 0.82);
+  --side: rgba(11, 12, 18, 0.86);
+  --line: rgba(160, 170, 200, 0.09);
+  --line-2: rgba(160, 170, 200, 0.16);
+  --line-3: rgba(160, 170, 200, 0.26);
+  --text: #e7e9f0;
+  --text-2: #9aa1b4;
+  --text-3: #6c7387;
+  --ion: #8b93ff;
+  --ion-2: #b4b9ff;
+  --ion-ink: #0b0d1c;
+  --ion-soft: rgba(139, 147, 255, 0.12);
+  --ion-glow: rgba(139, 147, 255, 0.35);
+  --crit: #f43f5e;
+  --high: #fb7f3c;
+  --med: #eab541;
+  --low: #34b98a;
+  --grid-dot: rgba(160, 170, 200, 0.07);
+  --orb-a: rgba(99, 102, 241, 0.16);
+  --orb-b: rgba(56, 189, 248, 0.07);
+  --orb-c: rgba(244, 63, 94, 0.06);
+  --shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 18px 40px -24px rgba(0, 0, 0, 0.8);
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", "Noto Sans SC", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: "Rajdhani", var(--font-ui);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --side-w: 232px;
+  --side-w-collapsed: 72px;
+  --top-h: 60px;
+  color-scheme: dark;
+
+  /* 旧变量名：保留给仍在内联样式里引用它们的地方 */
+  --cyber-cyan: var(--ion);
+  --cyber-text-main: var(--text);
+  --cyber-text-muted: var(--text-2);
+}
+
+[data-theme="light"] {
+  --bg: #f4f5f9;
+  --bg-2: #eceef4;
+  --panel: rgba(255, 255, 255, 0.82);
+  --panel-solid: #ffffff;
+  --panel-hover: rgba(255, 255, 255, 0.95);
+  --side: rgba(250, 251, 253, 0.88);
+  --line: rgba(22, 27, 45, 0.07);
+  --line-2: rgba(22, 27, 45, 0.12);
+  --line-3: rgba(22, 27, 45, 0.2);
+  --text: #161a26;
+  --text-2: #5a6175;
+  --text-3: #8a90a2;
+  --ion: #4f55d6;
+  --ion-2: #3a40b8;
+  --ion-ink: #ffffff;
+  --ion-soft: rgba(79, 85, 214, 0.08);
+  --ion-glow: rgba(79, 85, 214, 0.22);
+  --crit: #e11d48;
+  --high: #ea6a1f;
+  --med: #c48a12;
+  --low: #16976a;
+  --grid-dot: rgba(22, 27, 45, 0.07);
+  --orb-a: rgba(99, 102, 241, 0.12);
+  --orb-b: rgba(14, 165, 233, 0.07);
+  --orb-c: rgba(244, 63, 94, 0.05);
+  --shadow: 0 1px 2px rgba(22, 27, 45, 0.04), 0 12px 32px -20px rgba(22, 27, 45, 0.25);
+  color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   Base
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  background-image: radial-gradient(var(--grid-dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+  background-attachment: fixed;
+}
+
+::selection {
+  background: var(--ion-glow);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-2);
+  border: 3px solid transparent;
+  background-clip: padding-box;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--line-3);
+  background-clip: padding-box;
+}
+
+.opti-mono {
+  font-family: var(--font-mono) !important;
+  font-variant-ligatures: none;
+}
+
+mark {
+  background: rgba(234, 181, 65, 0.22);
+  color: inherit;
+  padding: 0 3px;
+  border-radius: 3px;
+  box-shadow: inset 0 -2px 0 var(--med);
+}
+
+:focus-visible {
+  outline: 2px solid var(--ion);
+  outline-offset: 2px;
+}
+
+.oti-eyebrow {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ion);
+}
+
+.oti-skip {
+  position: fixed;
+  left: 12px;
+  top: -60px;
+  z-index: 1100;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: var(--ion);
+  color: var(--ion-ink);
+  transition: top 0.2s var(--ease);
+}
+.oti-skip:focus {
+  top: 12px;
+}
+
+/* --------------------------------------------------------------------------
+   Ambient background — 三个缓慢漂移的大光斑，位于一切内容之下
+   -------------------------------------------------------------------------- */
+.oti-ambient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.oti-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  will-change: transform;
+}
+.oti-orb-a {
+  width: 46vw;
+  height: 46vw;
+  left: 12vw;
+  top: -22vw;
+  background: var(--orb-a);
+  animation: oti-drift-a 26s ease-in-out infinite alternate;
+}
+.oti-orb-b {
+  width: 38vw;
+  height: 38vw;
+  right: -14vw;
+  top: 18vh;
+  background: var(--orb-b);
+  animation: oti-drift-b 32s ease-in-out infinite alternate;
+}
+.oti-orb-c {
+  width: 30vw;
+  height: 30vw;
+  left: 30vw;
+  bottom: -18vw;
+  background: var(--orb-c);
+  animation: oti-drift-c 38s ease-in-out infinite alternate;
+}
+
+/* --------------------------------------------------------------------------
+   App shell — sidebar + topbar
+   -------------------------------------------------------------------------- */
+.oti-shell {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: var(--side-w) minmax(0, 1fr);
+  transition: grid-template-columns 0.32s var(--ease);
+}
+.oti-shell.is-collapsed {
+  grid-template-columns: var(--side-w-collapsed) minmax(0, 1fr);
+}
+
+.oti-side {
+  position: relative;
+  z-index: 20;
+  background: var(--side);
+  border-right: 1px solid var(--line);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+.oti-side-inner {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.oti-brand {
+  all: unset;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: var(--top-h);
+  padding: 0 19px;
+  cursor: pointer;
+  border-bottom: 1px solid var(--line);
+  flex-shrink: 0;
+}
+.oti-brand:focus-visible {
+  outline: 2px solid var(--ion);
+  outline-offset: -4px;
+  border-radius: 10px;
+}
+.oti-brand .oti-scope {
+  flex-shrink: 0;
+}
+.oti-brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.05;
+  white-space: nowrap;
+  transition: opacity 0.2s var(--ease), transform 0.3s var(--ease);
+}
+.oti-brand-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 20px;
+  letter-spacing: 0.04em;
+  color: var(--text);
+}
+.oti-brand-sub {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+
+.oti-nav {
+  position: relative;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 10px 12px 16px;
+}
+.oti-nav-group {
+  margin-top: 10px;
+}
+.oti-nav-group-label {
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: var(--text-3);
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.2s var(--ease);
+}
+.oti-nav-item {
+  all: unset;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  height: 38px;
+  padding: 0 12px;
+  margin: 1px 0;
+  border-radius: 9px;
+  color: var(--text-2);
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: color 0.18s var(--ease), background-color 0.18s var(--ease);
+}
+.oti-nav-item:hover {
+  color: var(--text);
+  background: var(--ion-soft);
+}
+.oti-nav-item:focus-visible {
+  outline: 2px solid var(--ion);
+  outline-offset: -2px;
+}
+.oti-nav-item.active {
+  color: var(--text);
+  font-weight: 600;
+}
+.oti-nav-item.active:hover {
+  background: transparent;
+}
+.oti-nav-icon {
+  display: inline-flex;
+  width: 20px;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease), color 0.18s;
+}
+.oti-nav-item:hover .oti-nav-icon {
+  transform: translateX(1px) scale(1.08);
+}
+.oti-nav-item.active .oti-nav-icon {
+  color: var(--ion);
+}
+.oti-nav-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.2s var(--ease);
+}
+
+/* 当前项的滑动底板 + 左侧离子光条 */
+.oti-nav-ink {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  top: 0;
+  z-index: 0;
+  border-radius: 9px;
+  background: linear-gradient(90deg, var(--ion-soft), transparent 140%);
+  border: 1px solid var(--line-2);
+  transition: transform 0.42s var(--ease), height 0.3s var(--ease);
+  pointer-events: none;
+}
+.oti-nav-ink::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--ion);
+  box-shadow: 0 0 12px var(--ion-glow), 0 0 2px var(--ion);
+}
+
+.oti-side-foot {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid var(--line);
+}
+.oti-session {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0 6px;
+  transition: opacity 0.2s var(--ease);
+}
+.oti-session-label {
+  font-size: 11px;
+  color: var(--text-3);
+}
+.oti-session-roles {
+  font-size: 12px;
+  color: var(--text-2);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oti-collapse,
+.oti-icon-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  color: var(--text-2);
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 0.18s, color 0.18s;
+}
+.oti-collapse:hover,
+.oti-icon-btn:hover {
+  background: var(--ion-soft);
+  color: var(--text);
+}
+.oti-collapse:focus-visible,
+.oti-icon-btn:focus-visible {
+  outline: 2px solid var(--ion);
+}
+
+/* 收起态：只留图标 */
+.is-collapsed .oti-brand {
+  padding: 0 19px;
+}
+.is-collapsed .oti-brand-text,
+.is-collapsed .oti-nav-label,
+.is-collapsed .oti-session {
+  opacity: 0;
+  pointer-events: none;
+}
+.is-collapsed .oti-brand-text {
+  transform: translateX(-6px);
+}
+.is-collapsed .oti-nav-group-label {
+  opacity: 0;
+  height: 10px;
+}
+.is-collapsed .oti-nav-group + .oti-nav-group {
+  border-top: 1px solid var(--line);
+  padding-top: 6px;
+}
+.is-collapsed .oti-session {
+  width: 0;
+  flex: 0;
+  padding: 0;
+}
+.is-collapsed .oti-side-foot {
+  justify-content: center;
+}
+
+.oti-scrim {
+  display: none;
+}
+.oti-burger {
+  display: none;
+}
+.oti-drawer-close {
+  display: none;
+}
+
+.oti-main {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.oti-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 15;
+  height: var(--top-h);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  background: color-mix(in srgb, var(--bg) 72%, transparent);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+}
+
+.oti-crumbs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  font-size: 14px;
+  white-space: nowrap;
+  animation: oti-fade-right 0.45s var(--ease) both;
+}
+.oti-crumb-group {
+  color: var(--text-3);
+}
+.oti-crumb-sep {
+  color: var(--line-3);
+}
+.oti-crumb-page {
+  color: var(--text);
+  font-weight: 600;
+}
+.oti-crumb-page.is-link {
+  cursor: pointer;
+  color: var(--text-2);
+  font-weight: 500;
+}
+.oti-crumb-page.is-link:hover {
+  color: var(--ion);
+}
+.oti-crumb-detail {
+  color: var(--ion);
+  font-size: 13px;
+  padding: 1px 8px;
+  border-radius: 6px;
+  background: var(--ion-soft);
+}
+
+.oti-jump {
+  all: unset;
+  box-sizing: border-box;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  height: 36px;
+  width: min(300px, 28vw);
+  padding: 0 8px 0 12px;
+  border-radius: 10px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+  color: var(--text-3);
+  font-size: 13px;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.25s var(--ease), color 0.2s;
+}
+.oti-jump:hover,
+.oti-jump:focus-visible {
+  outline: none;
+  border-color: var(--ion);
+  color: var(--text-2);
+  box-shadow: 0 0 0 4px var(--ion-soft);
+}
+.oti-jump-text {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+kbd {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1;
+  padding: 4px 6px;
+  border-radius: 6px;
+  border: 1px solid var(--line-2);
+  border-bottom-width: 2px;
+  color: var(--text-2);
+  background: var(--bg-2);
+}
+
+.oti-top-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.oti-project-status {
+  display: inline-flex;
+  min-width: 0;
+  max-width: 220px;
+}
+.oti-project-status > * {
+  display: block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.oti-clock {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-2);
+  font-variant-numeric: tabular-nums;
+}
+.oti-clock-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--low);
+  box-shadow: 0 0 0 0 var(--low);
+  animation: oti-live 2.4s ease-out infinite;
+}
+.oti-clock-zone {
+  color: var(--text-3);
+}
+
+.opti-theme-switch.ant-segmented .ant-segmented-item-label {
+  padding: 0 7px;
+}
+.opti-lang-switch.ant-segmented .ant-segmented-item-label {
+  padding: 0 8px;
+  font-size: 12px;
+}
+
+.oti-operator {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 10px 0 4px;
+  border-radius: 999px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+  cursor: pointer;
+  max-width: 220px;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.oti-operator:hover,
+.oti-operator.ant-dropdown-open {
+  border-color: var(--ion);
+}
+.oti-operator:focus-visible {
+  outline: 2px solid var(--ion);
+}
+.oti-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ion-ink);
+  background: linear-gradient(135deg, var(--ion), var(--ion-2));
+  flex-shrink: 0;
+}
+.oti-operator-name {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.oti-operator-caret {
+  font-size: 10px;
+  color: var(--text-3);
+  transition: transform 0.25s var(--ease);
+}
+.oti-operator.ant-dropdown-open .oti-operator-caret {
+  transform: rotate(180deg);
+}
+
+.oti-user-menu .ant-dropdown-menu {
+  min-width: 240px;
+  padding: 6px !important;
+  border: 1px solid var(--line-2);
+  backdrop-filter: blur(16px);
+}
+.oti-user-menu .oti-user-head {
+  cursor: default !important;
+  background: transparent !important;
+}
+.oti-user-head-inner {
+  padding: 6px 4px 4px;
+}
+.oti-user-head-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+}
+.oti-user-head-handle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+}
+.oti-user-head-roles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+}
+.oti-role-chip {
+  font-size: 11px;
+  padding: 1px 8px;
+  border-radius: 999px;
+  color: var(--ion);
+  background: var(--ion-soft);
+}
+
+/* 路由进度条：每次换页从左扫到右后淡出 */
+.oti-route-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--ion) 30%, var(--ion-2) 70%, transparent);
+  box-shadow: 0 0 10px var(--ion-glow);
+  transform-origin: left;
+  animation: oti-route 0.9s var(--ease) both;
+  pointer-events: none;
+}
+
+.oti-content {
+  position: relative;
+  flex: 1;
+  padding: 22px 24px 48px;
+  min-width: 0;
+}
+.oti-page {
+  max-width: 1600px;
+  margin: 0 auto;
+  animation: oti-page-in 0.6s var(--ease) both;
+}
+
+/* --------------------------------------------------------------------------
+   Panels (antd Card) — 半透明玻璃面板 + 跟随指针的柔光 + 顶部离子描边
+   -------------------------------------------------------------------------- */
+.ant-card {
+  position: relative;
+  background: var(--panel) !important;
+  border: 1px solid var(--line-2) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(14px) saturate(130%);
+  -webkit-backdrop-filter: blur(14px) saturate(130%);
+  transition: border-color 0.3s var(--ease), box-shadow 0.35s var(--ease), transform 0.35s var(--ease);
+  isolation: isolate;
+}
+.ant-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(420px circle at var(--mx, -999px) var(--my, -999px), var(--ion-soft), transparent 45%);
+  opacity: 0;
+  transition: opacity 0.35s var(--ease);
+  pointer-events: none;
+}
+.ant-card:hover::before {
+  opacity: 1;
+}
+.ant-card::after {
+  content: "";
+  position: absolute;
+  left: 18px;
+  right: 18px;
+  top: -1px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--ion-glow), transparent);
+  opacity: 0.7;
+  pointer-events: none;
+}
+.ant-card:hover {
+  border-color: var(--line-3) !important;
+}
+.ant-card .ant-card {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  background: transparent !important;
+  box-shadow: none;
+  border-radius: 10px !important;
+}
+.ant-card .ant-card::after {
+  display: none;
+}
+.ant-card-head {
+  border-bottom: 1px solid var(--line) !important;
+  min-height: 52px !important;
+}
+.ant-card-small > .ant-card-head {
+  min-height: 42px !important;
+}
+.ant-card-head-title {
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: 0.01em;
+  color: var(--text);
+}
+.ant-card-small > .ant-card-head .ant-card-head-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-2);
+}
+
+/* 页面主面板（每页最外层的第一张卡片）当作页头：标题更大，左侧加离子标记 */
+.oti-page > .ant-card > .ant-card-head .ant-card-head-title,
+.oti-page > div > .ant-card:first-child > .ant-card-head .ant-card-head-title {
+  font-size: 17px;
+  color: var(--text);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.oti-page > .ant-card > .ant-card-head .ant-card-head-title::before,
+.oti-page > div > .ant-card:first-child > .ant-card-head .ant-card-head-title::before {
+  content: "";
+  width: 4px;
+  height: 18px;
+  border-radius: 4px;
+  background: linear-gradient(180deg, var(--ion-2), var(--ion));
+  box-shadow: 0 0 10px var(--ion-glow);
+  flex-shrink: 0;
+}
+
+/* --------------------------------------------------------------------------
+   Tables
+   -------------------------------------------------------------------------- */
+.ant-table {
+  background: transparent !important;
+}
+.ant-table-thead > tr > th {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.04em;
+  color: var(--text-3) !important;
+  border-bottom: 1px solid var(--line-2) !important;
+  background: transparent !important;
+}
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid var(--line) !important;
+  transition: background-color 0.15s;
+}
+.ant-table-tbody > tr.ant-table-row {
+  position: relative;
+}
+/* 窄内容区里不把短词拆成单字：域名、标签、表头整体不换行，中文按词保留，必要时横向滚动 */
+.ant-table-content {
+  overflow-x: auto;
+}
+.ant-table-thead > tr > th,
+.ant-table-tbody .opti-mono,
+.ant-table-tbody .ant-tag {
+  white-space: nowrap;
+}
+.ant-table-cell {
+  word-break: keep-all;
+}
+.ant-table-tbody > tr.ant-table-row > td:first-child {
+  box-shadow: inset 2px 0 0 transparent;
+  transition: box-shadow 0.2s var(--ease), background-color 0.15s;
+}
+.ant-table-tbody > tr.ant-table-row:hover > td:first-child {
+  box-shadow: inset 2px 0 0 var(--ion);
+}
+
+/* --------------------------------------------------------------------------
+   Statistic
+   -------------------------------------------------------------------------- */
+.ant-statistic-title {
+  color: var(--text-3) !important;
+  font-size: 12px !important;
+}
+.ant-statistic-content {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--text) !important;
+  font-variant-numeric: tabular-nums;
+}
+.ant-statistic-content-value {
+  font-size: 30px;
+  letter-spacing: 0.01em;
+}
+.ant-statistic-content-suffix {
+  font-family: var(--font-ui);
+  font-size: 13px !important;
+  font-weight: 500;
+  color: var(--text-3);
+}
+.oti-stat-open_critical .ant-statistic-content {
+  color: var(--crit) !important;
+  text-shadow: 0 0 18px color-mix(in srgb, var(--crit) 35%, transparent);
+}
+.oti-stat-open_high .ant-statistic-content {
+  color: var(--high) !important;
+}
+.oti-stat-open_medium .ant-statistic-content {
+  color: var(--med) !important;
+}
+.oti-roll {
+  display: inline-flex;
+  overflow: hidden;
+  vertical-align: bottom;
+  line-height: 1.15;
+}
+.oti-roll-digit {
+  display: inline-block;
+  animation: oti-roll 0.9s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 120ms);
+}
+
+/* --------------------------------------------------------------------------
+   Tags — 柔和色块；严重级别前加圆点，「严重」圆点呼吸
+   -------------------------------------------------------------------------- */
+.ant-tag {
+  border-radius: 6px !important;
+  font-size: 12px;
+  font-weight: 500;
+  padding-inline: 7px;
+  line-height: 20px;
+}
+.ant-tag-red {
+  color: var(--crit) !important;
+  background: color-mix(in srgb, var(--crit) 12%, transparent) !important;
+  border-color: color-mix(in srgb, var(--crit) 30%, transparent) !important;
+}
+.ant-tag-volcano {
+  color: var(--high) !important;
+  background: color-mix(in srgb, var(--high) 12%, transparent) !important;
+  border-color: color-mix(in srgb, var(--high) 30%, transparent) !important;
+}
+.ant-tag-orange,
+.ant-tag-gold {
+  color: var(--med) !important;
+  background: color-mix(in srgb, var(--med) 12%, transparent) !important;
+  border-color: color-mix(in srgb, var(--med) 30%, transparent) !important;
+}
+.ant-tag-green {
+  color: var(--low) !important;
+  background: color-mix(in srgb, var(--low) 12%, transparent) !important;
+  border-color: color-mix(in srgb, var(--low) 30%, transparent) !important;
+}
+.ant-tag-blue,
+.ant-tag-geekblue,
+.ant-tag-cyan {
+  color: var(--ion) !important;
+  background: var(--ion-soft) !important;
+  border-color: color-mix(in srgb, var(--ion) 30%, transparent) !important;
+}
+.oti-sev {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+}
+.oti-sev::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+.oti-sev-critical::before {
+  animation: oti-beacon 1.8s ease-out infinite;
+}
+
+/* --------------------------------------------------------------------------
+   Inputs & buttons
+   -------------------------------------------------------------------------- */
+.ant-input-affix-wrapper > input.ant-input,
+.ant-input-affix-wrapper > input.ant-input:focus {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-input-number,
+.ant-picker {
+  transition: border-color 0.2s, box-shadow 0.25s var(--ease) !important;
+}
+.ant-input:focus,
+.ant-input-affix-wrapper-focused,
+.ant-select-focused .ant-select-selector,
+.ant-input-number-focused,
+.ant-picker-focused {
+  box-shadow: 0 0 0 4px var(--ion-soft) !important;
+}
+.oti-input-icon {
+  color: var(--text-3);
+}
+
+.ant-btn {
+  transition: transform 0.15s var(--ease), box-shadow 0.25s var(--ease), background 0.2s, border-color 0.2s, color 0.2s !important;
+}
+.ant-btn:not(:disabled):active {
+  transform: translateY(1px) scale(0.985);
+}
+.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled) {
+  position: relative;
+  overflow: hidden;
+  color: var(--ion-ink) !important;
+  background: linear-gradient(135deg, var(--ion), var(--ion-2)) !important;
+  border: none !important;
+  box-shadow: 0 6px 20px -8px var(--ion-glow);
+}
+.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled):hover {
+  box-shadow: 0 8px 26px -6px var(--ion-glow);
+  filter: brightness(1.06);
+}
+/* 主按钮悬停时一道斜向高光扫过 */
+.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled)::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -60%;
+  width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+  transform: skewX(-18deg);
+  pointer-events: none;
+}
+.ant-btn-primary:not(.ant-btn-dangerous):not(:disabled):hover::after {
+  animation: oti-sheen 0.8s var(--ease);
+}
+
+.ant-segmented {
+  border: 1px solid var(--line);
+}
+.ant-segmented-item-selected {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25), 0 0 0 1px var(--line-2) !important;
+}
+.opti-range-picker .ant-segmented-item-selected {
+  color: var(--ion) !important;
+  font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   Misc antd surfaces
+   -------------------------------------------------------------------------- */
+pre.opti-mono {
+  background: var(--bg-2) !important;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-size: 12.5px;
+}
+.ant-descriptions-item-label {
+  color: var(--text-3) !important;
+}
+.ant-alert {
+  border-radius: 10px !important;
+}
+.ant-modal-content,
+.ant-drawer-content {
+  border: 1px solid var(--line-2);
+}
+.ant-modal-content {
+  border-radius: 16px !important;
+}
+.ant-modal-mask,
+.ant-drawer-mask {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+.ant-collapse {
+  border-color: var(--line-2) !important;
+  background: transparent !important;
+}
+.ant-collapse > .ant-collapse-item {
+  border-color: var(--line-2) !important;
+}
+.ant-collapse-content {
+  background: transparent !important;
+  border-color: var(--line) !important;
+}
+.ant-timeline-item-tail {
+  border-inline-start-color: var(--line-2) !important;
+}
+.ant-list-item {
+  border-color: var(--line) !important;
+}
+.ant-empty-description {
+  color: var(--text-3) !important;
+}
+.ant-result-title {
+  color: var(--text) !important;
+}
+a {
+  transition: color 0.15s;
+}
+
+/* --------------------------------------------------------------------------
+   Charts
+   -------------------------------------------------------------------------- */
+.opti-chart-bar-group rect {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: oti-grow-y 0.7s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 22ms + 150ms);
+  transition: opacity 0.2s;
+}
+.opti-chart-container:hover .opti-chart-bar-group rect {
+  opacity: 0.45;
+}
+.opti-chart-container:hover .opti-chart-bar-group:hover rect {
+  opacity: 1;
+}
+
+.oti-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  animation: oti-fade-up 0.5s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 50ms + 100ms);
+}
+.oti-bar-label {
+  width: 150px;
+  flex-shrink: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--text);
+}
+.oti-bar-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 8px;
+  background: var(--line);
+  overflow: hidden;
+}
+.oti-bar-fill {
+  height: 100%;
+  border-radius: 8px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ion) 55%, transparent), var(--ion));
+  box-shadow: 0 0 12px var(--ion-glow);
+  transform-origin: left;
+  animation: oti-grow-x 0.9s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 60ms + 180ms);
+}
+.oti-bar-count {
+  width: 44px;
+  text-align: right;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* --------------------------------------------------------------------------
+   Dashboard — hero 与可编辑网格
+   -------------------------------------------------------------------------- */
+.oti-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  min-height: 150px;
+  padding: 26px 28px;
+  border-radius: 18px;
+  border: 1px solid var(--line-2);
+  background:
+    linear-gradient(120deg, color-mix(in srgb, var(--ion) 14%, transparent), transparent 55%),
+    var(--panel);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  animation: oti-fade-up 0.7s var(--ease) both;
+}
+.oti-hero::after {
+  /* 一道从左到右缓慢掠过的扫描线 */
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 30%;
+  left: -30%;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--ion) 10%, transparent), transparent);
+  animation: oti-scan 7s linear infinite;
+  pointer-events: none;
+}
+.oti-hero.is-editing {
+  border-color: color-mix(in srgb, var(--ion) 55%, transparent);
+  box-shadow: 0 0 0 4px var(--ion-soft), var(--shadow);
+}
+.oti-hero-scope {
+  position: absolute;
+  right: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0.9;
+  pointer-events: none;
+}
+.oti-hero-text {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+}
+.oti-hero-title {
+  margin: 6px 0 6px;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  line-height: 1.2;
+}
+.oti-hero-sub {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  color: var(--text-2);
+  font-size: 13px;
+}
+.oti-hero-range {
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--line-2);
+  color: var(--text-2);
+}
+.oti-hero-tools {
+  position: relative;
+  z-index: 1;
+  margin-right: 210px;
+}
+
+.opti-widget {
+  animation: oti-rise 0.65s var(--ease) both;
+}
+.opti-dashboard-grid > .react-grid-item:nth-child(1) .opti-widget { animation-delay: 0.04s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(2) .opti-widget { animation-delay: 0.08s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(3) .opti-widget { animation-delay: 0.12s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(4) .opti-widget { animation-delay: 0.16s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(5) .opti-widget { animation-delay: 0.2s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(6) .opti-widget { animation-delay: 0.24s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(7) .opti-widget { animation-delay: 0.3s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(8) .opti-widget { animation-delay: 0.36s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(9) .opti-widget { animation-delay: 0.42s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(10) .opti-widget { animation-delay: 0.48s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(11) .opti-widget { animation-delay: 0.54s; }
+.opti-dashboard-grid > .react-grid-item:nth-child(n + 12) .opti-widget { animation-delay: 0.6s; }
+
+.opti-dashboard-editing .opti-widget {
+  outline: 1px dashed color-mix(in srgb, var(--ion) 60%, transparent);
+  outline-offset: 2px;
+}
+.opti-dashboard-editing .opti-widget .ant-card-head {
+  cursor: move;
+}
+.opti-dashboard-grid .react-grid-item.react-grid-placeholder {
+  background: var(--ion) !important;
+  opacity: 0.14 !important;
+  border-radius: 14px;
+}
+.opti-dashboard-grid .react-grid-item > .react-resizable-handle::after {
+  border-color: var(--ion) !important;
+}
+.opti-dashboard-grid .react-grid-item.cssTransforms {
+  transition-timing-function: var(--ease);
+}
+
+/* 普通页面：卡片与表格行错峰入场 */
+.oti-page .ant-card:not(.opti-widget) {
+  animation: oti-rise 0.6s var(--ease) both;
+}
+.oti-page > * > .ant-card:nth-child(2),
+.oti-page .ant-col:nth-child(2) > .ant-card { animation-delay: 0.07s; }
+.oti-page > * > .ant-card:nth-child(3),
+.oti-page .ant-col:nth-child(3) > .ant-card { animation-delay: 0.14s; }
+.oti-page > * > .ant-card:nth-child(4) { animation-delay: 0.2s; }
+.oti-page > * > .ant-card:nth-child(5) { animation-delay: 0.26s; }
+.oti-page > * > .ant-card:nth-child(n + 6) { animation-delay: 0.32s; }
+.oti-page .ant-space-item:nth-child(2) > .ant-card { animation-delay: 0.07s; }
+.oti-page .ant-space-item:nth-child(3) > .ant-card { animation-delay: 0.14s; }
+.oti-page .ant-space-item:nth-child(4) > .ant-card { animation-delay: 0.2s; }
+.oti-page .ant-space-item:nth-child(5) > .ant-card { animation-delay: 0.26s; }
+.oti-page .ant-space-item:nth-child(n + 6) > .ant-card { animation-delay: 0.32s; }
+
+.oti-page .ant-table-tbody > tr.ant-table-row {
+  animation: oti-fade-up 0.45s var(--ease) both;
+}
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(2) { animation-delay: 30ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(3) { animation-delay: 60ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(4) { animation-delay: 90ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(5) { animation-delay: 120ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(6) { animation-delay: 150ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(7) { animation-delay: 180ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(8) { animation-delay: 210ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(9) { animation-delay: 240ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(10) { animation-delay: 270ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(11) { animation-delay: 300ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(12) { animation-delay: 330ms; }
+.oti-page .ant-table-tbody > tr.ant-table-row:nth-child(n + 13) { animation-delay: 360ms; }
+
+/* --------------------------------------------------------------------------
+   Scope emblem（信号示波镜）
+   -------------------------------------------------------------------------- */
+.oti-scope {
+  display: block;
+  overflow: visible;
+}
+.oti-scope-ring {
+  fill: none;
+  stroke: var(--ion);
+  stroke-opacity: 0.32;
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+.oti-scope-ring:first-of-type {
+  stroke-opacity: 0.55;
+}
+.oti-scope-axis {
+  stroke: var(--ion);
+  stroke-opacity: 0.14;
+  stroke-width: 0.6;
+  vector-effect: non-scaling-stroke;
+}
+.oti-scope-tick {
+  stroke: var(--ion);
+  stroke-opacity: 0.35;
+  stroke-width: 0.6;
+  vector-effect: non-scaling-stroke;
+}
+.oti-scope-sweep {
+  transform-origin: 50px 50px;
+  animation: oti-spin 4.8s linear infinite;
+}
+.oti-scope-beam {
+  stroke: var(--ion-2);
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+.oti-scope-core {
+  fill: var(--ion-2);
+}
+.oti-scope-blip-dot {
+  fill: var(--ion-2);
+}
+.oti-scope-blip-dot.hot {
+  fill: var(--crit);
+}
+.oti-scope-blip-halo {
+  fill: none;
+  stroke: var(--ion);
+  stroke-width: 0.8;
+  vector-effect: non-scaling-stroke;
+}
+.oti-scope-blip {
+  opacity: 0;
+  animation: oti-blip 4.8s ease-out infinite;
+  animation-delay: calc(var(--i, 0) * 0.96s);
+}
+.oti-scope-blip-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: oti-ping 4.8s ease-out infinite;
+  animation-delay: inherit;
+}
+
+/* Canvas radar（shell/Radar.tsx）：颜色从这些变量读取，随主题切换 */
+.radar {
+  display: block;
+  --radar-accent: var(--ion);
+  --radar-hot: var(--crit);
+  --radar-line: var(--ion);
+}
+.oti-radar-login {
+  width: 460px;
+  height: 460px;
+}
+.oti-radar-hero {
+  width: 196px;
+  height: 196px;
+}
+
+/* --------------------------------------------------------------------------
+   Login — 左侧产品说明 / 右侧登录面板
+   -------------------------------------------------------------------------- */
+.oti-login {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr);
+}
+.oti-login-hero {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 56px 56px;
+  overflow: hidden;
+  border-right: 1px solid var(--line);
+}
+.oti-login-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  letter-spacing: 0.04em;
+  animation: oti-fade-right 0.7s var(--ease) both;
+}
+.oti-login-scope {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-62%);
+  opacity: 0.9;
+  pointer-events: none;
+  animation: oti-zoom-in 1.2s var(--ease) both;
+}
+.oti-login-copy {
+  position: relative;
+  max-width: 600px;
+}
+.oti-login-copy > * {
+  animation: oti-fade-up 0.8s var(--ease) both;
+}
+.oti-login-copy > :nth-child(2) { animation-delay: 0.08s; }
+.oti-login-copy > :nth-child(3) { animation-delay: 0.16s; }
+.oti-login-copy > :nth-child(4) { animation-delay: 0.24s; }
+.oti-login-headline {
+  margin: 14px 0 14px;
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  color: var(--text);
+  background: linear-gradient(100deg, var(--text) 30%, var(--ion-2) 60%, var(--text) 90%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: oti-fade-up 0.8s var(--ease) both, oti-shimmer 9s ease-in-out 1s infinite;
+}
+.oti-login-sub {
+  margin: 0 0 26px;
+  font-size: 15px;
+  line-height: 1.75;
+  color: var(--text-2);
+}
+.oti-login-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+.oti-login-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--text-2);
+  animation: oti-fade-right 0.6s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 90ms + 400ms);
+}
+.oti-login-features .anticon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+  font-size: 11px;
+  color: var(--ion);
+  background: var(--ion-soft);
+}
+.oti-login-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  background: color-mix(in srgb, var(--bg) 40%, transparent);
+}
+.oti-login-tools {
+  position: absolute;
+  top: 28px;
+  right: 32px;
+  display: flex;
+  gap: 8px;
+}
+.oti-login-card {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+  padding: 34px 32px 28px;
+  border-radius: 20px;
+  border: 1px solid var(--line-2);
+  background: var(--panel);
+  box-shadow: var(--shadow), 0 40px 80px -40px var(--ion-glow);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  animation: oti-rise 0.8s var(--ease) 0.1s both;
+}
+.oti-login-card::before {
+  /* 缓慢旋转的离子描边 */
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(from var(--angle, 0deg), transparent 0deg, var(--ion) 40deg, transparent 90deg, transparent 360deg);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: oti-angle 6s linear infinite;
+  pointer-events: none;
+}
+.oti-login-title {
+  margin: 0 0 22px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text);
+}
+.oti-login-submit {
+  margin-top: 6px;
+  height: 44px !important;
+  font-weight: 600 !important;
+}
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* --------------------------------------------------------------------------
+   Command palette
+   -------------------------------------------------------------------------- */
+.oti-palette-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 14vh;
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  animation: oti-fade 0.2s ease both;
+}
+.oti-palette {
+  width: min(560px, calc(100vw - 32px));
+  border-radius: 16px;
+  border: 1px solid var(--line-2);
+  background: var(--panel-solid);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--ion-soft);
+  overflow: hidden;
+  animation: oti-pop 0.32s var(--ease) both;
+}
+.oti-palette-input {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 14px;
+  height: 54px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-3);
+}
+.oti-palette-input input {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+  font-size: 15px;
+}
+.oti-palette-list {
+  list-style: none;
+  margin: 0;
+  padding: 6px;
+  max-height: 50vh;
+  overflow-y: auto;
+}
+.oti-palette-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  color: var(--text-2);
+  animation: oti-fade-up 0.3s var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 18ms);
+}
+.oti-palette-item.active {
+  background: var(--ion-soft);
+  color: var(--text);
+}
+.oti-palette-icon {
+  display: inline-flex;
+  width: 20px;
+  justify-content: center;
+  color: var(--ion);
+}
+.oti-palette-label {
+  font-weight: 500;
+}
+.oti-palette-group {
+  font-size: 12px;
+  color: var(--text-3);
+}
+.oti-palette-path {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-3);
+}
+.oti-palette-enter {
+  color: var(--ion);
+}
+.oti-palette-empty {
+  padding: 22px;
+  text-align: center;
+  color: var(--text-3);
+}
+.oti-palette-foot {
+  padding: 8px 14px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--text-3);
+}
+
+/* --------------------------------------------------------------------------
+   Keyframes
+   -------------------------------------------------------------------------- */
+@keyframes oti-page-in {
+  from { opacity: 0; transform: translateY(14px); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes oti-rise {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes oti-fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes oti-fade-right {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes oti-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes oti-pop {
+  from { opacity: 0; transform: translateY(-10px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes oti-zoom-in {
+  from { opacity: 0; transform: translateY(-62%) scale(0.85); }
+  to { opacity: 0.9; transform: translateY(-62%) scale(1); }
+}
+@keyframes oti-roll {
+  from { opacity: 0; transform: translateY(70%); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes oti-grow-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+@keyframes oti-grow-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+@keyframes oti-route {
+  0% { transform: scaleX(0); opacity: 1; }
+  60% { transform: scaleX(1); opacity: 1; }
+  100% { transform: scaleX(1); opacity: 0; }
+}
+@keyframes oti-spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes oti-angle {
+  to { --angle: 360deg; }
+}
+@keyframes oti-blip {
+  0%, 4% { opacity: 0; }
+  8% { opacity: 1; }
+  55% { opacity: 0.85; }
+  100% { opacity: 0; }
+}
+@keyframes oti-ping {
+  0% { transform: scale(0.3); opacity: 0.9; }
+  40%, 100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes oti-beacon {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, currentColor 70%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 6px transparent; }
+}
+@keyframes oti-live {
+  0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--low) 60%, transparent); }
+  70%, 100% { box-shadow: 0 0 0 7px transparent; }
+}
+@keyframes oti-sheen {
+  from { left: -60%; }
+  to { left: 130%; }
+}
+@keyframes oti-scan {
+  from { left: -30%; }
+  to { left: 130%; }
+}
+@keyframes oti-shimmer {
+  0%, 100% { background-position: 100% 0; }
+  50% { background-position: 0% 0; }
+}
+@keyframes oti-drift-a {
+  to { transform: translate(8vw, 6vh) scale(1.1); }
+}
+@keyframes oti-drift-b {
+  to { transform: translate(-10vw, 10vh) scale(0.92); }
+}
+@keyframes oti-drift-c {
+  to { transform: translate(6vw, -8vh) scale(1.08); }
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1180px) {
+  .oti-clock {
+    display: none;
+  }
+  .oti-hero-tools {
+    margin-right: 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .oti-shell,
+  .oti-shell.is-collapsed {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .oti-side {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 272px;
+    z-index: 40;
+    transform: translateX(-102%);
+    visibility: hidden;
+    pointer-events: none;
+    transition: transform 0.35s var(--ease), visibility 0s linear 0.35s;
+    box-shadow: 20px 0 60px -20px rgba(0, 0, 0, 0.6);
+  }
+  .is-drawer .oti-side {
+    transform: none;
+    visibility: visible;
+    pointer-events: auto;
+    transition: transform 0.35s var(--ease), visibility 0s;
+  }
+  .oti-drawer-close {
+    display: inline-flex;
+    position: absolute;
+    right: 8px;
+    top: 12px;
+  }
+  .oti-side-inner {
+    height: 100%;
+  }
+  /* 抽屉里总是完整显示文字，不受「收起」影响 */
+  .is-collapsed .oti-brand-text,
+  .is-collapsed .oti-nav-label,
+  .is-collapsed .oti-session {
+    opacity: 1;
+    pointer-events: auto;
+    transform: none;
+  }
+  .is-collapsed .oti-session {
+    width: auto;
+    flex: 1;
+    padding: 0 6px;
+  }
+  .is-collapsed .oti-nav-group-label {
+    opacity: 1;
+    height: 28px;
+  }
+  .oti-collapse {
+    display: none;
+  }
+  .oti-scrim {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 30;
+    background: rgba(0, 0, 0, 0.45);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s var(--ease);
+  }
+  .is-drawer .oti-scrim {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .oti-burger {
+    display: inline-flex;
+  }
+  .oti-topbar {
+    padding: 0 12px;
+    gap: 10px;
+  }
+  .oti-crumb-group,
+  .oti-crumb-group + .oti-crumb-sep {
+    display: none;
+  }
+  .oti-jump {
+    width: 36px;
+    padding: 0;
+    justify-content: center;
+  }
+  .oti-jump-text,
+  .oti-jump kbd {
+    display: none;
+  }
+  .oti-operator-name,
+  .oti-operator-caret {
+    display: none;
+  }
+  .oti-operator {
+    padding: 0 3px;
+  }
+  .oti-content {
+    padding: 16px 12px 40px;
+  }
+  .oti-hero {
+    padding: 20px;
+  }
+  .oti-hero-scope {
+    opacity: 0.25;
+  }
+  .oti-login {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .oti-login-hero {
+    border-right: none;
+    padding: 28px 24px 8px;
+    min-height: auto;
+  }
+  .oti-login-scope {
+    width: 260px;
+    right: -80px;
+    top: 30px;
+    transform: none;
+    opacity: 0.35;
+    animation: none;
+  }
+  .oti-login-scope .radar {
+    width: 260px;
+    height: 260px;
+  }
+  .oti-login-copy {
+    margin-top: 28px;
+  }
+  .oti-login-features {
+    display: none;
+  }
+  .oti-login-panel {
+    padding: 24px 16px 40px;
+  }
+  .oti-login-tools {
+    position: static;
+    align-self: flex-end;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 560px) {
+  .oti-project-status {
+    max-width: 84px;
+  }
+  .oti-crumbs {
+    overflow: hidden;
+  }
+  .oti-crumb-page,
+  .oti-crumb-detail {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .oti-top-right .opti-lang-switch {
+    display: none;
+  }
+  .oti-hero-title {
+    font-size: 24px;
+  }
+}
+
+.oti-config-status { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; }
+.oti-config-pre { max-height: 420px; overflow: auto; white-space: pre; font-size: 12px; margin: 0; }
+.oti-config-errors { margin: 0; padding-left: 18px; }
+.oti-config-form { max-width: 720px; }
+.oti-settings { background: transparent; }
+.oti-settings-content { padding-left: 24px; min-width: 0; }
+.oti-settings-mobile-nav { display: none; }
+@media (max-width: 768px) {
+  .oti-settings.ant-layout-has-sider { flex-direction: column; }
+  .oti-settings > .ant-layout-sider { display: none; }
+  .oti-settings > .oti-settings-mobile-nav { display: block; width: 100%; margin-bottom: 16px; }
+  .oti-settings.ant-layout-has-sider > .oti-settings-content { width: 100%; padding-left: 0; }
+}
+
+/* Keep the page-size selector available on phones as well as desktop. */
+@media (max-width: 575px) {
+  body .ant-pagination { flex-wrap: wrap; row-gap: 8px; }
+  body .ant-pagination .ant-pagination-options { display: inline-block; }
+}

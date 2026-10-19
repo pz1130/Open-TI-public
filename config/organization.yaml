@@ -1,0 +1,11 @@
+# 使用本平台的机构信息（每个机构各自部署时修改）。用于对外请求的 User-Agent 与下架投诉材料。
+name: "Example Organization"
+short_name: "Example"
+website: "https://www.example.org"
+security_contact: "mailto:security@example.org"
+legal_statement: "本机构授权本平台对冒用本机构名义的网站与信息进行监测与处置。"
+
+
+legal_statement_en: "We are authorized to monitor and act against websites and messages that impersonate our organization."
+takedown_sender: "abuse-response@example.org"
+signature: "Example Organization Security Team"

@@ -1,0 +1,24 @@
+id: ip_rdap
+name: "IP RDAP 托管信息"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.ip_rdap.enricher:IpRdapEnricher"
+homepage: https://data.iana.org/rdap/
+commercial_use: allowed
+last_reviewed: 2026-10-03
+egress: any
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_second: 1 }
+config_schema:
+  type: object
+  properties:
+    bootstrap_v4: { type: string, default: "https://data.iana.org/rdap/ipv4.json" }
+    bootstrap_v6: { type: string, default: "https://data.iana.org/rdap/ipv6.json" }
+  additionalProperties: false
+outputs: [hosting]
+compliance_notes: |
+  地区互联网注册机构（RIR）公开的网络分配信息；只用网络名称、所属机构与滥用联系人（下架投诉用）。

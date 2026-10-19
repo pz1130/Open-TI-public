@@ -1,0 +1,33 @@
+id: dnstwist
+name: "dnstwist 仿冒域名生成与注册检查"
+version: 0.1.0
+category: phishing
+kind: [generator]
+tier: free
+entrypoint: "opti.connectors.dnstwist.connector:DnstwistConnector"
+homepage: https://github.com/elceef/dnstwist
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+schedule: { default: "0 3 * * *", min_interval_seconds: 43200 }
+config_schema:
+  type: object
+  properties:
+    tlds:
+      type: array
+      items: { type: string }
+      default: [com, net, org, info, top, xyz, online, site, shop, cn]
+    long_token_fuzzers: { type: array, items: { type: string }, default: [] }
+    short_token_fuzzers: { type: array, items: { type: string }, default: [homoglyph] }
+    max_candidates: { type: integer, minimum: 1, default: 50000 }
+    concurrency: { type: integer, minimum: 1, maximum: 500, default: 50 }
+    nameservers: { type: array, items: { type: string }, default: [] }
+  additionalProperties: false
+outputs: [domain, dns]
+compliance_notes: |
+  本地生成候选域名，只做 DNS NS 查询判断是否已注册，不访问网站。
+  三字母品牌词的拼写变体绝大多数是无关的合法域名，因此只用同形字算法 + 词缀组合（设计文档 7.3）。
+
+# 支持关键词页面的手动扫描
+search_inputs: [domain]

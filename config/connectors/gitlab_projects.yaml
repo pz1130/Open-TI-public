@@ -1,0 +1,5 @@
+# 审核 GitLab.com 用途与排除清单后启用。
+enabled: false
+license_approved: false
+config:
+  exclude_namespaces: []

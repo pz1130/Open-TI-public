@@ -1,0 +1,33 @@
+id: app_store_search
+name: "Apple App Store 应用候选搜索"
+version: 0.1.0
+category: app_store
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.app_store_search.connector:AppStoreSearchConnector"
+homepage: https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/iTuneSearchAPI/Searching.html
+commercial_use: unknown
+last_reviewed: 2026-10-04
+egress: overseas
+pii_risk: low
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 10 }
+schedule: { default: "17 */6 * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    countries: { type: array, items: { type: string, pattern: "^[A-Z]{2}$" }, minItems: 1, maxItems: 5 }
+    max_queries: { type: integer, minimum: 1, maximum: 10, default: 5 }
+    max_results: { type: integer, minimum: 1, maximum: 200, default: 50 }
+  required: [countries]
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  仅查询经审核国家商店的公开应用元数据，不抓取或保存图标、截图和预览素材。
+  名称或开发者命中仅视为待研判候选，不自动断定冒充；搜索结果并非完整应用目录。
+  Apple 官方 Search API 文档为归档版本；机构审核适用条款和安全监测用途后才能启用。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text]

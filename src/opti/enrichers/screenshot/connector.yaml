@@ -1,0 +1,54 @@
+id: screenshot
+name: "截图存证（隔离 Playwright 沙箱）"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.screenshot.enricher:ScreenshotEnricher"
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: true
+plans:
+  free:
+    rate_limit: { per_second: 1 }
+config_schema:
+  type: object
+  properties:
+    sandbox_url: { type: string, default: "http://browser:8000" }
+    # https 失败再试 http，两次（含沙箱的 15 秒余量）必须在节点的 80 秒富化上限内完成
+    timeout: { type: number, minimum: 1, maximum: 25, default: 20 }
+    logo_hashes:
+      type: array
+      maxItems: 12
+      default: []
+      items:
+        type: object
+        required: [name, dhash64]
+        additionalProperties: false
+        properties:
+          name: { type: string, minLength: 1, maxLength: 80 }
+          dhash64: { type: string, pattern: "^[0-9a-f]{16}$" }
+    favicon_hashes:
+      type: array
+      maxItems: 12
+      default: []
+      items:
+        type: object
+        required: [name, mmh3]
+        additionalProperties: false
+        properties:
+          name: { type: string, minLength: 1, maxLength: 80 }
+          mmh3: { type: integer, minimum: -2147483648, maximum: 2147483647 }
+  additionalProperties: false
+outputs: [screenshot, html_snapshot]
+compliance_notes: |
+  对已产生 High/Critical 告警的可疑域名及用户配置的监视域名复查：在独立网络的沙箱容器中用全新浏览器打开首页，
+  禁用下载与 Service Worker，只放行 GET/HEAD，拦截内网地址，不提交表单、不登录（设计文档 2.2、2.8）。
+  必须在境外采集节点运行，不暴露使用机构出口 IP。截图与 HTML 快照带 SHA-256 存入对象存储（设计文档 11）。
+  可选 logo_hashes 由 opti logo-hash 从机构拥有的 Logo 图片生成；只比较页面截图内已加载的可见图片。
+  dHash 距离仅供人工复核，不参与评分或自动判定；Logo 比对不拉取额外页面图片或向第三方发送机构 Logo。
+  可选 favicon_hashes 由 opti favicon-hash 对机构批准的本地图标生成；仅对同源图标执行一次受限 GET，
+  保存哈希供人工关联，不自动提交到 Shodan/FOFA，也不据相同哈希自动判定仿冒。
+  截图 OCR 在 browser 容器中通过 OPTI_SANDBOX_OCR_ENABLED 单独启用；仅保存品牌词命中和字符数，
+  不保存完整识别文字，不作为自动评分或处置依据。

@@ -1,0 +1,7 @@
+# 配置 rua 邮箱与凭据后启用；authorized_networks 填写本机构合法的第三方发件服务网段
+enabled: false
+license_approved: true
+license_ref: "OWN-DATA"
+config:
+  mailbox: "${OPTI_DMARC_MAILBOX:-dmarc@example.org}"
+  authorized_networks: []

@@ -1,0 +1,20 @@
+id: tranco
+name: "Tranco 域名流行度排名"
+version: 0.1.0
+category: enrichment
+kind: [enricher]
+tier: free
+entrypoint: "opti.enrichers.tranco.enricher:TrancoEnricher"
+homepage: https://tranco-list.eu
+commercial_use: allowed
+last_reviewed: 2026-10-02
+egress: any
+default_enabled: true
+config_schema:
+  type: object
+  properties:
+    db_path: { type: string, default: "data/tranco.sqlite" }
+  additionalProperties: false
+outputs: [rank]
+compliance_notes: |
+  公开排名列表，用于降低误报（高排名域名极少是新仿冒，设计文档 9.2 benign_signals）。

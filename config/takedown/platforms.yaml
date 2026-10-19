@@ -1,0 +1,101 @@
+# 初始值：在 Web“配置”页保存后以数据库为准，本文件不再生效。
+# 下架投诉渠道（设计文档 12.1）。平台只生成材料、不自动发送。
+# sla_hours：提交后多少小时未处理就提醒（0 表示不跟踪，例如浏览器拦截举报）
+sla_hours: { registrar: 72, hosting: 48, cdn: 48, report: 0, platform: 72 }
+max_reminders: 3
+
+# CDN / 反向代理：按域名的名称服务器后缀，或托管 IP 的 RDAP 网络名称（前缀）、所属机构识别。
+# CDN 通常只把投诉转给源站托管商或显示警告页，因此仍需向源站托管商投诉。
+providers:
+  - id: cloudflare
+    name: Cloudflare
+    nameservers: [".ns.cloudflare.com"]
+    network_names: ["CLOUDFLARENET"]
+    channel: { url: "https://abuse.cloudflare.com/phishing" }
+    note: "Cloudflare 会把投诉转给源站托管商并可显示钓鱼警告页；源站托管商需另行投诉。"
+
+# 并行举报（加速浏览器与安全厂商拦截）；tlds 为空表示所有域名
+reporting:
+  - id: google_safe_browsing
+    name: Google Safe Browsing
+    channel: { url: "https://safebrowsing.google.com/safebrowsing/report_phish/" }
+  - id: microsoft_smartscreen
+    name: Microsoft SmartScreen
+    channel: { url: "https://www.microsoft.com/en-us/wdsi/support/report-unsafe-site" }
+  - id: netcraft
+    name: Netcraft
+    channel: { url: "https://report.netcraft.com/report" }
+  - id: apwg
+    name: APWG
+    channel: { email: "reportphishing@apwg.org" }
+  - id: cn_12321
+    name: "12321 网络不良与垃圾信息举报受理中心"
+    tlds: ["cn", "xn--fiqs8s"]
+    channel: { url: "https://www.12321.cn/" }
+
+# 名单内的链接不由沙箱访问或加入监视；证据来自分析员上传的截图。
+# 仅列平台自己的域名，不列共享上级域名（如 qq.com）。
+platforms:
+  - id: linkedin
+    name: LinkedIn
+    hosts: [linkedin.com, lnkd.in]
+    channel: { url: "https://www.linkedin.com/help/linkedin/answer/a1338436" }
+    note: "在资料页使用「更多 → 举报」选择冒充或虚假账号。"
+  - id: facebook
+    name: Facebook
+    hosts: [facebook.com, fb.com, fb.me, m.me]
+    channel: { url: "https://www.facebook.com/help/contact/295309487309948" }
+    note: "冒充账号举报表单。"
+  - id: instagram
+    name: Instagram / Threads
+    hosts: [instagram.com, threads.net, threads.com]
+    channel: { url: "https://help.instagram.com/contact/636276399721841" }
+    note: "冒充账号举报表单。"
+  - id: x
+    name: X
+    hosts: [x.com, twitter.com, t.co]
+    channel: { url: "https://help.x.com/en/forms/authenticity/impersonation" }
+    note: "品牌或机构被冒充时由本机构或授权代表提交。"
+  - id: telegram
+    name: Telegram
+    hosts: [t.me, telegram.me, telegram.dog]
+    channel: { email: "abuse@telegram.org" }
+    note: "邮件注明 t.me 链接或 @用户名。"
+  - id: youtube
+    name: YouTube
+    hosts: [youtube.com, youtu.be]
+    channel: { url: "https://support.google.com/youtube/answer/2801947" }
+    note: "在频道页举报用户；法律投诉另有表单。"
+  - id: tiktok
+    name: TikTok
+    hosts: [tiktok.com]
+    channel: { url: "https://support.tiktok.com/en/safety-hc/report-a-problem/report-a-user" }
+    note: "在账号资料页举报冒充；官方帮助页列出具体步骤及地区表单。"
+  - id: wechat
+    name: 微信
+    hosts: [weixin.qq.com, wechat.com]
+    channel: { url: "https://weixin110.qq.com/security/readtemplate?t=security_center_website%2Freport" }
+    note: "微信安全中心投诉维权；公众号投诉可能需要扫码验证。"
+  - id: weibo
+    name: 微博
+    hosts: [weibo.com, weibo.cn]
+    channel: { url: "https://service.account.weibo.com/rights/person" }
+    note: "微博官方涉企投诉指引列出的人身权益投诉入口。"
+  - id: bluesky
+    name: Bluesky
+    hosts: [bsky.app]
+    channel: { url: "https://bsky.social/about/support" }
+    note: "在资料页「··· → 举报账号」选择冒充；也可经支持页提交。"
+  # 只列搜索的实例；举报由账号所在实例的管理员处理。新增搜索实例时同步加入 hosts。
+  - id: mastodon
+    name: Mastodon
+    hosts: [mastodon.social]
+    channel: { url: "https://docs.joinmastodon.org/user/moderating/#report" }
+    note: "在资料页使用「举报」，举报发给账号所在实例的管理员；远程账号可勾选转发给其实例。"
+
+# SLA 超时后的升级渠道（按投诉对象类型）
+escalation:
+  - kind: registrar
+    name: "ICANN 合规投诉"
+    channel: { url: "https://www.icann.org/compliance/complaint" }
+    note: "注册商在合理时间内不处理滥用投诉时，可向 ICANN 合规部门投诉（仅限通用顶级域）。"

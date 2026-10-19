@@ -1,0 +1,9 @@
+{
+  "identities": [
+    {
+      "name": "opti-dev",
+      "credentials": [{ "accessKey": "opti-dev", "secretKey": "opti-dev-secret" }],
+      "actions": ["Admin", "Read", "Write", "List", "Tagging"]
+    }
+  ]
+}

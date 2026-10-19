@@ -1,0 +1,13 @@
+Subject: 举报：$domain 冒用 $org_name 名义（$category）
+
+我们是 $org_name（$org_website）。以下网址冒用本机构名义，属于$category，请将其加入拦截名单。
+
+  网址：$url
+  域名：$domain
+  首次发现：$first_seen
+
+证据摘要：
+$evidence
+
+联系方式：$org_contact
+$signature

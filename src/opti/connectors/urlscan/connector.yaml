@@ -1,0 +1,35 @@
+id: urlscan
+name: "urlscan.io 历史扫描搜索"
+version: 0.1.0
+category: phishing
+kind: [poll]
+tier: freemium
+entrypoint: "opti.connectors.urlscan.connector:UrlscanConnector"
+homepage: https://urlscan.io
+tos_url: https://urlscan.io/terms/
+commercial_use: restricted
+last_reviewed: 2026-10-02
+egress: overseas
+default_enabled: false
+credentials:
+  - { name: api_key, required: false, description: "urlscan API Key（有 Key 配额更高）" }
+plans:
+  free:
+    rate_limit: { per_minute: 30 }
+schedule: { default: "20 * * * *", min_interval_seconds: 3600 }
+config_schema:
+  type: object
+  properties:
+    lookback: { type: string, pattern: "^[0-9]+[hd]$", default: "2d" }
+    size: { type: integer, minimum: 10, maximum: 100, default: 100 }
+    max_pages: { type: integer, minimum: 1, maximum: 10, default: 3 }
+  additionalProperties: false
+outputs: [url]
+compliance_notes: |
+  只用搜索接口检索他人已公开的扫描结果；不提交扫描（提交会把关注对象交给第三方，平台已有自建沙箱）。
+  免费版配额有限且商业用途受限（设计文档 2.4），法务确认前默认不批准。
+  域名包含查询使用需认证的 page.domain.keyword 前置通配；无 Key 时降为 page.domain 前缀查询。
+  仅 urlscan/overall 的明确 malicious=true 计入情报确认；缺失判定不补成恶意。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text, domain]

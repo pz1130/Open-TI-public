@@ -1,0 +1,3 @@
+# Freemium，商业用途受限（设计文档 2.4），默认不批准；可不填 Key 以较低配额运行
+enabled: true
+license_approved: false

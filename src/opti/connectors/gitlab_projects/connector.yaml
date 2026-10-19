@@ -1,0 +1,35 @@
+id: gitlab_projects
+name: "GitLab.com 公开项目候选搜索"
+version: 0.1.0
+category: code
+kind: [poll]
+tier: free
+entrypoint: "opti.connectors.gitlab_projects.connector:GitLabProjectsConnector"
+homepage: https://docs.gitlab.com/api/projects/
+tos_url: https://handbook.gitlab.com/handbook/legal/api-terms/
+commercial_use: unknown
+last_reviewed: 2026-10-04
+egress: overseas
+pii_risk: low
+default_enabled: false
+plans:
+  free:
+    rate_limit: { per_minute: 10 }
+schedule: { default: "23 4 * * *", min_interval_seconds: 86400 }
+config_schema:
+  type: object
+  properties:
+    exclude_namespaces: { type: array, items: { type: string }, maxItems: 50, default: [] }
+    max_queries: { type: integer, minimum: 1, maximum: 3, default: 2 }
+    page_size: { type: integer, minimum: 1, maximum: 20, default: 20 }
+    max_pages: { type: integer, minimum: 1, maximum: 2, default: 1 }
+  additionalProperties: false
+outputs: [document]
+compliance_notes: |
+  仅使用匿名可见的公开项目列表 API；只保存品牌命中的名称、路径和描述片段。
+  不请求代码文件、提交、成员资料或头像，不把项目候选视为代码泄露。
+  API 条款禁止批量采集及系统性批量导出；上线前机构须确认此窄范围低频查询获准，
+  并核对自有命名空间排除清单。默认关闭且未批准。
+
+# 支持关键词页面的手动扫描
+search_inputs: [text]

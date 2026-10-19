@@ -1,0 +1,20 @@
+Subject: Abuse report: $domain served through your network impersonating $org_name ($category)
+
+Dear $target_name abuse team,
+
+We are $org_name ($org_website). $legal_statement
+
+The website below uses your CDN / proxy service and impersonates our organization ($category). Please forward this report to the origin hosting provider and display a warning to visitors of this website.
+
+  Domain: $domain
+  URL: $url
+  First seen: $first_seen
+
+Evidence summary (capture time and SHA-256 of screenshots and page snapshots):
+$evidence
+
+The full evidence package is available on request. Please reply to this message or contact $org_contact.
+
+Regards,
+$signature
+$date

@@ -1,0 +1,23 @@
+# 单点登录（OIDC，设计文档 15、16）。默认关闭；配置说明见 deploy/README-oidc.md。
+# 客户端密钥放在环境变量 OPTI_SECRET_OIDC_CLIENT_SECRET（公共客户端可不设，只靠 PKCE）。
+enabled: false
+provider: generic            # generic：任意 OIDC 身份提供方；entra：Microsoft Entra ID 预设（用 tenant_id，默认读应用角色 roles）
+# label: "单位账号"           # 登录按钮上显示的名称
+issuer: ""                    # generic 必填，如 https://sso.example.org/realms/opti
+# tenant_id: ""               # entra 必填：目录（租户）ID
+client_id: ""
+# redirect_uri: ""            # 默认 <alerting.yaml 的 public_base_url>/api/v1/auth/oidc/callback
+# post_logout_redirect_uri: ""
+scopes: [openid, profile, email]
+username_claim: preferred_username
+display_name_claim: name
+email_claim: email
+roles_claim: groups           # entra 预设默认 roles
+# 平台角色 → 身份提供方中的组名（或组 ID）/ 应用角色值；用户可同时得到多个角色；一个都没有则不能登录
+role_mapping:
+  analyst: []
+  responder: []
+  viewer: []
+  auditor: []
+  compliance_officer: []
+  platform_admin: []

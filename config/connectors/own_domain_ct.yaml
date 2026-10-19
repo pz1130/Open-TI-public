@@ -1,0 +1,7 @@
+enabled: true
+license_approved: true
+license_ref: "DEV-DEFAULT"
+config:
+  url: "${OPTI_CERTSTREAM_URL:-ws://localhost:8080/}"
+  # 批准的 CA 清单由本机构提供；为空时只记录、不告警
+  approved_issuers: []

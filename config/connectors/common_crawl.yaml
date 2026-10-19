@@ -1,0 +1,5 @@
+# 人工审查待核查 URL、Common Crawl 条款及原站点权利后启用。
+enabled: false
+license_approved: false
+config:
+  candidate_urls: []

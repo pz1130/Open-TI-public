@@ -1,0 +1,4 @@
+# 非正式接口，默认不批准（设计文档 2.4、4.1）
+enabled: true
+license_approved: false
+config: {}

@@ -1,0 +1,94 @@
+[project]
+name = "opti"
+version = "0.1.0"
+license = "Apache-2.0"
+description = "Open-TI：关键词威胁情报与数字风险防护平台"
+requires-python = ">=3.12"
+dependencies = [
+  "pydantic>=2.8",
+  "defusedxml>=0.7",
+  "pyyaml>=6.0",
+  "tldextract>=5.3",
+  "idna>=3.7",
+  "rapidfuzz>=3.9",
+  "opencc-python-reimplemented>=0.1.7",
+  "httpx[socks]>=0.28",
+  "websockets>=15",
+  "dnspython>=2.7",
+  "cryptography>=44",
+  "jsonschema>=4.23",
+  "dnstwist>=20250130",
+  "sqlalchemy[asyncio]>=2.0.36",
+  "asyncpg>=0.30",
+  "alembic>=1.14",
+  "taskiq>=0.11",
+  "taskiq-redis>=1.0",
+  "fastapi>=0.115",
+  "uvicorn>=0.32",
+  "boto3>=1.35",
+  "redis>=5.2",
+  "argon2-cffi>=23.1",
+  "pyjwt[crypto]>=2.10",
+  "trafilatura>=2.0",
+  "stix2>=3.0.2,<4",
+  "pillow>=12.3,<13",
+  "mmh3>=5,<6",
+  "lingua-language-detector>=2.2,<3",
+]
+
+[project.scripts]
+opti = "opti.cli:main"
+
+[dependency-groups]
+dev = [
+  "pytest>=8",
+  "pytest-asyncio>=1.0",
+  "ruff>=0.6",
+  "mypy>=1.11",
+  "types-PyYAML",
+  "types-jsonschema",
+  "pre-commit>=3.8",
+  "testcontainers[postgres,redis]>=4.9",
+  "moto[s3]>=5.0",
+]
+
+sandbox = [
+  "playwright>=1.48",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/opti"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM", "RUF"]
+# RUF001-003：允许中文全角标点和同形字（测试数据需要）；E501：行宽由 ruff format 控制，
+# 中文注释按双倍宽度计算容易误报
+ignore = ["RUF001", "RUF002", "RUF003", "E501"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+mypy_path = "src"
+
+[[tool.mypy.overrides]]
+module = ["defusedxml.*", "tldextract.*", "opencc.*", "dnstwist.*", "asyncpg.*", "testcontainers.*", "boto3.*", "botocore.*", "moto.*", "playwright.*", "stix2.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --import-mode=importlib"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+  "db: 需要 Docker（PostgreSQL / Valkey 测试容器）",
+  "browser: 需要 Playwright 与 Chromium（uv sync --group sandbox && uv run playwright install chromium）",
+  "keycloak: 需要 Docker（Keycloak 测试容器，首次拉取镜像较慢）",
+]

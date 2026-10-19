@@ -1,0 +1,33 @@
+text,expected,note
+"The Sample Brand approved a USD 1 billion loan to India for renewable energy projects.",relevant,完整英文名
+"ORBIT Bank president spoke at the annual meeting in Springfield on Tuesday.",relevant,媒体常用别称
+"SBR, the multilateral lender founded by the ORBIT countries, issued a green bond in Springfield.",relevant,缩写 + 特有上下文
+"Scammers are posting fake Sample Brand loan offers on social media and asking for a processing fee.",relevant,诈骗文案
+"样本品牌集团宣布在春田发行人民币绿色债券。",relevant,中文全称
+"样本品牌行长在年会上发表讲话。",relevant,中文简称
+"有人冒充样本银行发布低息贷款广告，要求先交手续费。",relevant,中文诈骗文案
+"樣本品牌集團宣佈新一輪貸款。",relevant,繁体
+"The SBR said its board approved new projects; the ORBIT-backed bank is headquartered in Springfield.",relevant,缩写 + 特有上下文
+"Marca de Exemplo anunciou novo financiamento para o Brasil.",relevant,葡语完整名称
+"Образцовый бренд одобрил кредит для Южной Африки.",relevant,俄语名称
+"Fraud alert: emails claiming to be from the Sample Brand offer grant approval for a fee.",relevant,诈骗提醒
+"SBR Bank PLC reported a rise in quarterly profit in Colombo.",irrelevant,斯里兰卡 SBR Bank
+"Standard Business Registry of Sri Lanka opened a new branch.",irrelevant,同缩写的其他机构
+"MySQL SBR Cluster 8.0 adds new replication features.",irrelevant,数据库术语
+"We migrated the session store to SBR Cluster last week.",irrelevant,数据库术语
+"Novo Banco shares rose in Lisbon after the results.",irrelevant,葡萄牙 Novo Banco
+"BNDES aprovou financiamento para a indústria brasileira.",irrelevant,巴西开发银行
+"The Standard Business Registry of Ghana announced new SME loans.",irrelevant,同缩写的其他机构
+"SBR is a common abbreviation for network database in older textbooks.",irrelevant,缩写其他含义
+"The SBR form must be filed by Friday, the bank said.",irrelevant,缩写其他含义
+"Bank of Springfield posted record earnings.",irrelevant,上下文词但无品牌
+"The ORBIT summit discussed trade but no bank was mentioned.",irrelevant,上下文词但无品牌
+"SBR Capital Holdings announced a dividend.",irrelevant,同名公司
+"Development Bank of Southern Africa signed a new agreement.",irrelevant,其他开发银行
+"The Asian Development Bank approved a loan to Pakistan.",irrelevant,其他开发银行
+"SBR Wealth Management launched a new fund in Sri Lanka.",irrelevant,同名公司
+"Our new office in Springfield opened; SBR stands for Shared Backup Repository in our team.",irrelevant,难例：缩写与上下文词偶然共现
+"开发银行今天发布了年度报告。",irrelevant,中文泛称
+"国家开发银行支持基础设施建设。",irrelevant,中国国家开发银行
+"SBR Investment Bank arranged the bond issue.",irrelevant,同名公司
+"He works at SBR, the Standard Business Registry of Kenya.",irrelevant,同缩写的其他机构
